@@ -3,11 +3,16 @@
 Definição do estado e das funções que convertem estados em strings e vice-versa
 */
 
+#pragma once
+
+#include "constants.h"
+
 /** \brief O nº máximo de inimigos */
 #define MAX_INIMIGOS		100
 
 /** \brief O nº máximo de obstáculos */
 #define MAX_OBSTACULOS		100
+
 
 /**
 \brief Estrutura que armazena uma posição

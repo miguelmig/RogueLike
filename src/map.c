@@ -5,7 +5,7 @@
 #include <stdlib.h> // rand()
 #include <string.h> // strdup
 
-#define ESCALA 40
+#include "estado.h"
 
 static const char imageDirectory[] = "http://localhost/images/";
 

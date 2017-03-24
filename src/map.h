@@ -1,6 +1,6 @@
 #pragma once
+#include "estado.h"
 
-#define MAP_NAME_MAX 20
 typedef enum
 {
 	EMPTY,

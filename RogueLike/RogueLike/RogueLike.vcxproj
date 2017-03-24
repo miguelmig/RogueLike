@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cgi.h" />
+    <ClInclude Include="..\..\src\constants.h" />
     <ClInclude Include="..\..\src\estado.h" />
     <ClInclude Include="..\..\src\map.h" />
     <ClInclude Include="..\..\src\utils.h" />

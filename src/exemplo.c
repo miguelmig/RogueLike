@@ -8,8 +8,6 @@
 #include "utils.h"
 
 #define MAX_BUFFER		10240
-#define TAM				10
-#define ESCALA			40
 
 
 int posicao_valida(int x, int y) {
