@@ -29,6 +29,8 @@ typedef struct posicao {
 typedef struct estado {
 	/** A posição do jogador */
 	POSICAO jog;
+	/** A posição da saida */
+	POSICAO exit;
 	/** O nº de inimigos */
 	char num_inimigos;
 	/** O nº de obstáculos */
@@ -39,6 +41,11 @@ typedef struct estado {
 	POSICAO obstaculo[MAX_OBSTACULOS];
 	/** Seed necessária para a função rand() */
 	unsigned int gameSeed;
+	/* Estado sobre a textura de cada casa */
+	char tileTextureOffset[TAM][TAM];
+	/* Estado sobre a textura de cada obstáculo */
+	char obstacleTextureOffset[TAM][TAM];
+
 } ESTADO;
 
 

@@ -4,7 +4,6 @@
 #include "cgi.h"
 #include <stdlib.h> // rand()
 #include <string.h> // strdup
-
 #include "estado.h"
 
 static const char imageDirectory[] = "http://localhost/images/";
@@ -31,16 +30,28 @@ static const char* assetFileNames[] =
 #define TILE_NUM_ASSETS 3
 static const char* tileFileNames[TILE_NUM_ASSETS] =
 {
+	/*
 	"dungeon_floor_normal.png",
+	"dungeon_floor_normal2.png",
 	"dungeon_floor_broken.png",
 	"dungeon_floor_broken2.png",
+
+	*/
+	
+	
+	"black_stone_floor.png",
+	"black_stone_floor2.png",
+	"black_stone_floor_broken.png"
+	
 };
 
-#define OBSTACLE_NUM_ASSETS 2
+#define OBSTACLE_NUM_ASSETS 4
 static const char* obstacleFileNames[OBSTACLE_NUM_ASSETS] =
 {
-	"trashcan.png",
-	"pots.png",
+	"big_rock_default2.png",
+	"lava_pool.png",
+	"fall_pit.png",
+	"big_rock2.png",
 };
 
 
@@ -57,32 +68,81 @@ const char* getImagesAssetDirectory()
 	return imageDirectory;
 }
 
-const char* getAssetFileName(CellTypes cellType)
+const char* getAssetFileName(CellTypes cell, char tileOffset)
 {
 	char full_path[256] = { 0 };
+	CellTypes cellType = cell;
 
 	switch (cellType)
 	{
 	case EMPTY:
-		sprintf(full_path, "%s%s", tileSubDirectory, tileFileNames[rand() % TILE_NUM_ASSETS]);
+		sprintf(full_path, "%s%s", tileSubDirectory, tileFileNames[tileOffset]);
 		return _strdup(full_path);
 	case OBSTACLE:
-		sprintf(full_path, "%s%s", obstacleSubDirectory, obstacleFileNames[rand() % OBSTACLE_NUM_ASSETS]);
+		sprintf(full_path, "%s%s", obstacleSubDirectory, obstacleFileNames[tileOffset]);
 		return _strdup(full_path);
 	default:
 		return _strdup(assetFileNames[cellType]);
 	}
 }
 
+char generateRandomTileOffset()
+{
+	return random_number(0, TILE_NUM_ASSETS - 1);
+}
 
-void drawCell(CellTypes cell_type, int x, int y)
+char generateRandomObstacleOffset()
+{
+	return random_number(0, OBSTACLE_NUM_ASSETS - 1);
+}
+
+CellTypes getCellTypeAtPosition(ESTADO* e, int x, int y)
+{
+	if (e == NULL)
+	{
+		return -1;
+	}
+
+	int i;
+	// Check against enemies coords
+	for (i = 0; i < e->num_inimigos; ++i)
+	{
+		if (e->inimigo[i].x == x && e->inimigo[i].y == y)
+			return ENEMY;
+	}
+
+	// Check against obstacles coords
+	for (i = 0; i < e->num_obstaculos; ++i)
+	{
+		if (e->obstaculo[i].x == x && e->obstaculo[i].y == y)
+			return OBSTACLE;
+	}
+
+	// Check against exit's coords
+	if (x == e->exit.x && y == e->exit.y)
+		return PORTAL;
+
+	return EMPTY;
+}
+
+void draw_tile(ESTADO* e, int x, int y)
 {
 	const char* base_directory = getImagesAssetDirectory();
-	const char* asset_file_name = getAssetFileName(cell_type);
+	char offset = e->tileTextureOffset[x][y];
+	const char* asset_file_name = getAssetFileName(EMPTY, offset);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
-	free(asset_file_name);
+	free((void*)asset_file_name);
+}
+
+void draw_obstacle(ESTADO* e, int x, int y)
+{
+	const char* base_directory = getImagesAssetDirectory();
+	char offset = e->obstacleTextureOffset[x][y];
+	const char* asset_file_name = getAssetFileName(OBSTACLE, offset);
+	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
+		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 }
 
 void drawArrow(Orientations orientation, int x, int y)
@@ -94,6 +154,7 @@ void drawArrow(Orientations orientation, int x, int y)
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 }
 
+/*
 int load_map(const char* file_name, TMapData* target)
 {
 	if (target == NULL)
@@ -110,6 +171,6 @@ int load_map(const char* file_name, TMapData* target)
 		return -1;
 	}
 
-
 	return 0;
 }
+*/
