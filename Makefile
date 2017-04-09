@@ -1,12 +1,14 @@
 CFLAGS=-Wall
-FICHEIROS=cgi.h estado.c estado.h exemplo.c Makefile
+FICHEIROS=cgi.h estado.c estado.h map.c map.h exemplo.c Makefile
+
+SOURCEDIR = src/
 
 install: exemplo
 	sudo cp exemplo /usr/lib/cgi-bin
 	touch install
 
-exemplo: exemplo.o estado.o
-	cc -o exemplo exemplo.o estado.o
+exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o
+	cc -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o
 
 exemplo.zip: $(FICHEIROS)
 	zip -9 exemplo.zip $(FICHEIROS)
@@ -18,5 +20,7 @@ doc:
 clean:
 	rm -rf *.o exemplo Doxyfile latex html install
 
-estado.o: estado.c estado.h
-exemplo.o: exemplo.c cgi.h estado.h
+estado.o: estado.c
+exemplo.o: exemplo.c
+map.o: map.c
+utils.o: utils.c

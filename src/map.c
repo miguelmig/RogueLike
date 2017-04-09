@@ -77,12 +77,12 @@ const char* getAssetFileName(CellTypes cell, char tileOffset)
 	{
 	case EMPTY:
 		sprintf(full_path, "%s%s", tileSubDirectory, tileFileNames[tileOffset]);
-		return _strdup(full_path);
+		return strdup(full_path);
 	case OBSTACLE:
 		sprintf(full_path, "%s%s", obstacleSubDirectory, obstacleFileNames[tileOffset]);
-		return _strdup(full_path);
+		return strdup(full_path);
 	default:
-		return _strdup(assetFileNames[cellType]);
+		return strdup(assetFileNames[cellType]);
 	}
 }
 
