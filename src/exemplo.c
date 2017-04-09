@@ -227,7 +227,7 @@ int main() {
 	ESTADO e = ler_estado(getenv("QUERY_STRING"));
 
 	COMECAR_HTML;
-	print_debug("game seed: %u", e.gameSeed);
+	//print_debug("game seed: %u", e.gameSeed);
 	ABRIR_SVG(600, 600);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
