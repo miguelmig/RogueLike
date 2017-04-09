@@ -68,7 +68,7 @@ const char* getImagesAssetDirectory()
 	return imageDirectory;
 }
 
-const char* getAssetFileName(CellTypes cell, char tileOffset)
+const char* getAssetFileName(CellTypes cell, unsigned char tileOffset)
 {
 	char full_path[256] = { 0 };
 	CellTypes cellType = cell;

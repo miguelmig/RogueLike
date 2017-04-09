@@ -14,7 +14,7 @@ void print_error(const char* format, ...)
 	vsnprintf(buffer, sizeof(buffer), format, args);
 
 	va_end(args);
-	fprintf(stderr, buffer);
+	fputs(buffer, stderr);
 }
 
 
@@ -27,7 +27,7 @@ void print_debug(const char* format, ...)
 	vsnprintf(buffer, sizeof(buffer), format, args);
 
 	va_end(args);
-	fprintf(stdout, buffer);
+	fputs(buffer, stdout);
 }
 
 int random_number(int min, int max)

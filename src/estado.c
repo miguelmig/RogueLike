@@ -10,7 +10,7 @@ char *estado2str(ESTADO e) {
 
 	for (i = 0, j = 0; i < sizeof(ESTADO); i++, j += 2)
 	{
-		sprintf((unsigned char*)(buffer + j), "%02x", p[i]);
+		sprintf((char*)(buffer + j), "%02x", p[i]);
 	}
 
 	buffer[j] = 0;
