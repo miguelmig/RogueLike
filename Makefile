@@ -4,7 +4,7 @@ FICHEIROS=cgi.h estado.c estado.h map.c map.h exemplo.c Makefile
 SOURCEDIR = src/
 
 install: exemplo
-	sudo cp exemplo /usr/lib/cgi-bin
+	sudo cp exemplo /usr/lib/cgi-bin/jogo.cgi
 	touch install
 
 exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o
