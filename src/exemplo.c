@@ -231,6 +231,9 @@ int main() {
 
 	COMECAR_HTML;
 	//print_debug("game seed: %u", e.gameSeed);
+	INCLUIR_JQUERY;
+	INCLUIR_SCRIPT("roguelike.js");
+
 	ABRIR_SVG(600, 600);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)

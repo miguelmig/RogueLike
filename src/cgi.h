@@ -8,7 +8,12 @@ Macros úteis para gerar CGIs
 /**
 * Caminho para as imagens
 */
-#define IMAGE_PATH							"http://localhost/images/"
+#define IMAGE_PATH							"/images/"
+
+/**
+* Caminho para os scripts
+*/
+#define SCRIPT_PATH							"/scripts/"
 
 /**
 \brief Macro para começar o html
@@ -56,3 +61,11 @@ Macros úteis para gerar CGIs
 \brief Macro para fechar o link
 */
 #define FECHAR_LINK							printf("</a>\n")
+
+/**
+\brief Macro para incluir JQuery
+*/
+#define INCLUIR_JQUERY						printf("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js\"></script>")
+
+
+#define INCLUIR_SCRIPT(script)				printf("<script type=\"text/javascript\" src=\"%s\"></script>", SCRIPT_PATH script)
