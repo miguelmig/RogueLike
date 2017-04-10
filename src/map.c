@@ -6,7 +6,10 @@
 #include <string.h> // strdup
 #include "estado.h"
 
-static const char imageDirectory[] = "http://localhost/images/";
+static const char imageDirectory[] = "/images/";
+#ifdef _WIN32
+#define strdup _strdup
+#endif
 
 /**
  \brief Sub-directory containg any tile assets
