@@ -23,6 +23,7 @@ char generateRandomTileOffset();
 char generateRandomObstacleOffset();
 void draw_tile(ESTADO* e, int x, int y);
 void draw_obstacle(ESTADO* e, int x, int y);
+void createArrowLink(Orientations orientation, int x, int y, const char* link);
 void drawArrow(Orientations orientation, int x, int y);
 
 const char* getImagesAssetDirectory();

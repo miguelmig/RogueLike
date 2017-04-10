@@ -63,6 +63,14 @@ static const char* orientationFileNames[] =
 	"down_arrow.png",
 };
 
+static const char* orientationIds[] = 
+{
+	"arrow-left",
+	"arrow-right",
+	"arrow-up",
+	"arrow-down",
+};
+
 const char* getImagesAssetDirectory()
 {
 	return imageDirectory;
@@ -143,6 +151,16 @@ void draw_obstacle(ESTADO* e, int x, int y)
 	const char* asset_file_name = getAssetFileName(OBSTACLE, offset);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
+
+}
+
+
+void createArrowLink(Orientations orientation, int x, int y, const char* link)
+{
+	const char* orientation_id = orientationIds[orientation];
+	printf("<a id=%s xlink:href=%s>\n", orientation_id, link);
+	drawArrow(orientation, x, y);
+	printf("</a>\n");
 }
 
 void drawArrow(Orientations orientation, int x, int y)

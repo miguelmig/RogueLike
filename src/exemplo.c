@@ -157,10 +157,13 @@ void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
 	novo.jog.x = x;
 	novo.jog.y = y;
 	sprintf(link, "http://localhost/cgi-bin/jogo.cgi?%s", estado2str(novo));
+	createArrowLink(orientation, x, y, link);
+	/*
 	ABRIR_LINK(link);
 	drawArrow(orientation, x, y);
 	//imprime_casa(x, y);
 	FECHAR_LINK;
+	*/
 }
 
 void imprime_movimentos(ESTADO e) {
