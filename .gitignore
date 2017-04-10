@@ -95,3 +95,6 @@ TestClient/
 *.o
 src/*.o
 
+*.zip
+exemplo
+install
