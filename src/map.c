@@ -152,6 +152,7 @@ void draw_obstacle(ESTADO* e, int x, int y)
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
+	free((void*)asset_file_name);
 }
 
 
