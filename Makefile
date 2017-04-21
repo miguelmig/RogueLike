@@ -5,6 +5,9 @@ SOURCEDIR = src/
 
 install: exemplo
 	sudo cp exemplo /usr/lib/cgi-bin/jogo.cgi
+	sudo chmod 777 /usr/lib/cgi-bin/
+	sudo cp -R scripts/ /var/www/html/
+	sudo cp -R assets/ /var/www/html/
 	touch install
 
 exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o
