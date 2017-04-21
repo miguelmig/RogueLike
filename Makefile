@@ -8,7 +8,7 @@ install: exemplo
 	touch install
 
 exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o
-	cc -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o
+	cc -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o
 
 exemplo.zip: $(FICHEIROS)
 	zip -9 exemplo.zip $(FICHEIROS)
