@@ -23,12 +23,14 @@
     <ClInclude Include="..\..\src\constants.h" />
     <ClInclude Include="..\..\src\estado.h" />
     <ClInclude Include="..\..\src\map.h" />
+    <ClInclude Include="..\..\src\query.h" />
     <ClInclude Include="..\..\src\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\estado.c" />
     <ClCompile Include="..\..\src\exemplo.c" />
     <ClCompile Include="..\..\src\map.c" />
+    <ClCompile Include="..\..\src\query.c" />
     <ClCompile Include="..\..\src\utils.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

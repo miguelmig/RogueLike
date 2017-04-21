@@ -7,7 +7,7 @@ install: exemplo
 	sudo cp exemplo /usr/lib/cgi-bin/jogo.cgi
 	touch install
 
-exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o
+exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o
 	cc -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o
 
 exemplo.zip: $(FICHEIROS)
@@ -24,3 +24,4 @@ estado.o: estado.c
 exemplo.o: exemplo.c
 map.o: map.c
 utils.o: utils.c
+query.o: query.c
