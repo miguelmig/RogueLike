@@ -159,7 +159,7 @@ void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
 	novo.jog.x = x;
 	novo.jog.y = y;
 	create_move_query(dx, dy, link);
-	//sprintf(link, "http://localhost/cgi-bin/jogo.cgi?%s", estado2str(novo));
+	//sprintf(link, "?%s", estado2str(novo));
 	createArrowLink(orientation, x, y, link);
 	/*
 	ABRIR_LINK(link);
@@ -192,7 +192,7 @@ void imprime_saida(ESTADO e)
 		char link[MAX_BUFFER];
 		/*
 		ESTADO novo = inicializar();
-		sprintf(link, "http://localhost/cgi-bin/jogo.cgi?%s", estado2str(novo));
+		sprintf(link, "?%s", estado2str(novo));
 		*/
 		create_exit_query(link);
 		ABRIR_LINK(link);

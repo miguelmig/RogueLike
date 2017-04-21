@@ -97,11 +97,11 @@ int parse_query(const char* query_string, ESTADO* e)
 
 void create_move_query(int dx, int dy, char* destination)
 {
-	sprintf(destination, "http://localhost/cgi-bin/jogo.cgi?move&x=%d&y=%d", dx, dy);
+	sprintf(destination, "?move&x=%d&y=%d", dx, dy);
 }
 
 
 void create_exit_query(char* destination)
 {
-	sprintf(destination, "http://localhost/cgi-bin/jogo.cgi?exit&x=%d&y=%d", PLAYER_START_X, PLAYER_START_Y);
+	sprintf(destination, "?exit&x=%d&y=%d", PLAYER_START_X, PLAYER_START_Y);
 }
