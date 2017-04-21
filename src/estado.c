@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "estado.h"
-
+#include <string.h>
 #define MAX_BUFFER		10240
 
 char *estado2str(ESTADO e) {
@@ -32,3 +32,45 @@ ESTADO str2estado(char *argumentos) {
 	return e;
 }
 
+int read_state_from_file(const char* file_name, ESTADO* destination)
+{
+	if (destination == NULL)
+	{
+		return 0;
+	}
+
+	FILE* f = fopen(file_name, "rb");
+	if (f == NULL)
+	{
+		return 0;
+	}
+
+	static char buffer[MAX_BUFFER];
+	fread(buffer, sizeof(char), MAX_BUFFER, f);
+	fclose(f);
+	ESTADO e = str2estado(buffer);
+	*destination = e;
+	return 1;
+}
+
+int output_state_to_file(const ESTADO* e, const char* file_name)
+{
+	if (e == NULL)
+	{
+		return 0;
+	}
+
+	// Serialize game state to a byte string
+	char* serialized_state_data = estado2str(*e);
+	size_t size_of_data = strlen(serialized_state_data) + sizeof(char); // 1 extra byte for null terminator
+
+	FILE* f = fopen(file_name, "wb");
+	if (f == NULL)
+	{
+		return 0;
+	}
+
+	fwrite((const void*)serialized_state_data, sizeof(char), size_of_data, f);
+	fclose(f);
+	return 1;
+}

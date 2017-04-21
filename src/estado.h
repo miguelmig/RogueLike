@@ -62,3 +62,19 @@ char *estado2str(ESTADO e);
 @returns O estado correspondente à string dos argumentos
 */
 ESTADO str2estado(char *argumentos);
+
+/**
+\brief Função que carrega o estado guardado num ficheiro
+@param file_name Nome do ficheiro aonde o estado está guardado
+@param destination Apontador para o endereço onde vai ser guardado o estado
+@returns 0 se o ficheiro nao existir, 1 caso tudo tenha corrido bem
+*/
+int read_state_from_file(const char* file_name, ESTADO* destination);
+
+/**
+\brief Função que guarda o estado do jogo num ficheiro
+@param e Estado a ser guardado
+@param file_name Nome do ficheiro aonde o estado vai ser guardado
+@returns 0 se tiver ocurrido algum erro, 1 caso tudo tenha corrido bem
+*/
+int output_state_to_file(const ESTADO* e, const char* file_name);

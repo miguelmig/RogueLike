@@ -6,6 +6,7 @@
 #include "map.h"
 #include "time.h"
 #include "utils.h"
+#include "query.h"
 
 #define MAX_BUFFER		10240
 
@@ -56,13 +57,14 @@ int posicao_livre(int x, int y, ESTADO* e)
 
 	return 1;
 }
+
 ESTADO inicializar() {
 	ESTADO e = {{0}};
 	e.gameSeed = (unsigned int)time(0);
 	srand(e.gameSeed);
 
-	e.jog.x = 5;
-	e.jog.y = 9;
+	e.jog.x = PLAYER_START_X;
+	e.jog.y = PLAYER_START_Y;
 
 	e.exit.x = 5;
 	e.exit.y = 0;
@@ -156,7 +158,8 @@ void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
 	
 	novo.jog.x = x;
 	novo.jog.y = y;
-	sprintf(link, "http://localhost/cgi-bin/jogo.cgi?%s", estado2str(novo));
+	create_move_query(dx, dy, link);
+	//sprintf(link, "http://localhost/cgi-bin/jogo.cgi?%s", estado2str(novo));
 	createArrowLink(orientation, x, y, link);
 	/*
 	ABRIR_LINK(link);
@@ -187,8 +190,11 @@ void imprime_saida(ESTADO e)
 	if (abs(e.jog.x - e.exit.x) + abs(e.jog.y - e.exit.y) <= 1)
 	{
 		char link[MAX_BUFFER];
+		/*
 		ESTADO novo = inicializar();
 		sprintf(link, "http://localhost/cgi-bin/jogo.cgi?%s", estado2str(novo));
+		*/
+		create_exit_query(link);
 		ABRIR_LINK(link);
 		IMAGEM(e.exit.x, e.exit.y, ESCALA, "trapdoor1.png");
 		FECHAR_LINK;
@@ -225,11 +231,32 @@ void imprime_obstaculos(ESTADO e) {
 		draw_obstacle(&e, e.obstaculo[i].x, e.obstaculo[i].y);
 }
 
+ESTADO obter_estado()
+{
+	ESTADO e = {{0}}; 
+	int file_exists = read_state_from_file(STATE_FILE_NAME, &e);
+	if (!file_exists)
+	{
+		e = inicializar();
+		output_state_to_file(&e, STATE_FILE_NAME);
+	}
+
+	return e;
+}
+
+
 int main() {
 	int x, y;
-	ESTADO e = ler_estado(getenv("QUERY_STRING"));
-
+	//ESTADO e = ler_estado(getenv("QUERY_STRING"));
+	ESTADO e = obter_estado();
+	
 	COMECAR_HTML;
+	int state_changed = parse_query(getenv("QUERY_STRING"), &e);
+	if (state_changed)
+	{
+		output_state_to_file(&e, STATE_FILE_NAME);
+	}
+
 	//print_debug("game seed: %u", e.gameSeed);
 	INCLUIR_JQUERY;
 	INCLUIR_SCRIPT("roguelike.js");

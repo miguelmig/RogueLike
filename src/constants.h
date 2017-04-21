@@ -10,3 +10,9 @@
 
 #define ESCALA 40
 
+#define STATE_FILE_NAME "gamestate.txt"
+
+#define PLAYER_START_X 5
+#define PLAYER_START_Y 9
+
+
