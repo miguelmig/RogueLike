@@ -1,5 +1,5 @@
 
-$(document).keydown(function (e)
+$(document).keyup(function (e)
 {
     var windowsDestination = "";
     switch(e.which)
