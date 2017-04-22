@@ -195,7 +195,7 @@ void imprime_saida(ESTADO e)
 		sprintf(link, "?%s", estado2str(novo));
 		*/
 		create_exit_query(link);
-		ABRIR_LINK(link);
+		ABRIR_LINK_ADV(link, "exit", "exit");
 		IMAGEM(e.exit.x, e.exit.y, ESCALA, "trapdoor1.png");
 		FECHAR_LINK;
 	}
@@ -244,6 +244,11 @@ ESTADO obter_estado()
 	return e;
 }
 
+void imprimir_butao_restart()
+{
+	printf("<button type=\"button\" id=restart >Restart</button>\n");
+}
+
 
 int main() {
 	int x, y;
@@ -251,7 +256,8 @@ int main() {
 	ESTADO e = obter_estado();
 	
 	COMECAR_HTML;
-	int state_changed = parse_query(getenv("QUERY_STRING"), &e);
+	int change_turn = 0;
+	int state_changed = parse_query(getenv("QUERY_STRING"), &e, &change_turn);
 	if (state_changed)
 	{
 		output_state_to_file(&e, STATE_FILE_NAME);
@@ -261,7 +267,8 @@ int main() {
 	INCLUIR_JQUERY;
 	INCLUIR_SCRIPT("roguelike.js");
 
-	ABRIR_SVG(600, 600);
+	printf("<body onLoad=\"load();\">\n");
+	ABRIR_SVG(TAM * ESCALA , TAM * ESCALA);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
 			imprime_casa(&e, x, y);
@@ -270,8 +277,11 @@ int main() {
 	imprime_inimigos(e);
 	imprime_obstaculos(e);
 	imprime_saida(e);
-
 	FECHAR_SVG;
+	printf("</body>");
+
+
+	imprimir_butao_restart();
 	
 	return 0;
 }

@@ -47,15 +47,16 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 	return 1;
 }
 
-int parse_query(const char* query_string, ESTADO* e)
+int parse_query(const char* query_string, ESTADO* e, int* change_turn)
 {
-	if (e == NULL)
+	if (e == NULL || change_turn == NULL)
 	{
 		return 0;
 	}
 
 	if (query_string == NULL || strlen(query_string) == 0)
 	{
+		*change_turn = 0;
 		return 0;
 	}
 
@@ -71,8 +72,9 @@ int parse_query(const char* query_string, ESTADO* e)
 	memcpy(buffer, query_string, param_size);
 	buffer[param_size] = '\0';
 
-	if (strlen(query_string) <= param_size)
+	if (strlen(query_string) < param_size)
 	{
+		*change_turn = 0;
 		return 0;
 	}
 
@@ -81,7 +83,9 @@ int parse_query(const char* query_string, ESTADO* e)
 	/* Buffer contains the action name */
 	if (strcmp(buffer, "move") == 0)
 	{
-		return parse_move_action(params_start, e);
+		int ret = parse_move_action(params_start, e);
+		*change_turn = ret;
+		return ret;
 	}
 	CMP("attack")
 	{
@@ -89,7 +93,15 @@ int parse_query(const char* query_string, ESTADO* e)
 	}
 	CMP("exit")
 	{
+		*change_turn = 0; // When the player goes through the exit, don't change turn.
 		return parse_exit_action(params_start, e);
+	}
+	CMP("restart")
+	{
+		ESTADO novo = inicializar();
+		*e = novo;
+		*change_turn = 0;
+		return 1;
 	}
 	return 0;
 }

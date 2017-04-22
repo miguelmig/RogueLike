@@ -1,52 +1,79 @@
 
-
 $(document).keydown(function (e)
 {
-    var windowsDestination;
-    if(e.which == 38)
+    var windowsDestination = "";
+    switch(e.which)
     {
-        var up = document.getElementById('arrow-up');
-        if(up == null)
+    case 37:
+    case 38:
+    case 39:
+    case 40:
+        windowsDestination = getArrowLink(e.which);
+        if(windowsDestination == "")
         {
-            return;
+            windowsDestination = getExitHyperlink();
         }
+        break;
+    case 82:
+        windowsDestination = "?restart";
+    }
 
-        windowsDestination = up.href.animVal;
-    }
-    else if(e.which == 40)
+    if (windowsDestination != "")
     {
-        var down = document.getElementById('arrow-down');
-        if(down == null)
-        {
-            return;
-        }
-
-        windowsDestination = down.href.animVal;
+        window.location = windowsDestination;
     }
-    else if(e.which == 39)
-    {
-        var right = document.getElementById('arrow-right');
-        if(right == null)
-        {
-            return;
-        }
-
-        windowsDestination = right.href.animVal;
-    }
-    else if(e.which == 37)
-    {
-        var left = document.getElementById('arrow-left');
-        if(left == null)
-        {
-            return;
-        }
-
-        windowsDestination = left.href.animVal;
-    }
-    else
-    {
-        return;
-    }
-    window.location = windowsDestination;
 });
 
+function getArrowLink(key)
+{
+    var id = "";
+    switch(key)
+    {
+        case 37:
+            id = 'arrow-left';
+            break;
+        case 38:
+            id = 'arrow-up';
+            break;
+        case 39:
+            id = 'arrow-right';
+            break;
+        case 40:
+            id = 'arrow-down';
+            break;
+        
+    }
+    var elem = document.getElementById(id);
+    if(elem == null)
+    {
+        return "";
+    }
+
+    return elem.href.animVal;
+}
+
+function getExitHyperlink()
+{
+    var elem = document.getElementById("exit");
+    if(elem == null)
+    {
+        return "";
+    }
+
+    return elem.href.animVal;
+}
+
+function restart()
+{
+    window.location = "?restart";
+}
+
+
+function load()
+{
+    var restartButton = document.getElementById('restart');
+    if(restartButton)
+    {
+        restartButton.onclick = restart;
+    }
+}

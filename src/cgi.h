@@ -58,6 +58,15 @@ Macros úteis para gerar CGIs
 #define ABRIR_LINK(link)					printf("<a xlink:href=%s>\n", link)
 
 /**
+\brief Macro para abrir um link com mais opções
+@param link O caminho para o link
+@param id Identificador do link
+@param class_ Classe de identificação do link
+*/
+
+#define ABRIR_LINK_ADV(link, id, class_)	printf("<a id=%s class=%s xlink:href=%s>\n", id, class_, link)
+
+/**
 \brief Macro para fechar o link
 */
 #define FECHAR_LINK							printf("</a>\n")
