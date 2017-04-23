@@ -7,6 +7,7 @@ install: exemplo
 	sudo cp exemplo /usr/lib/cgi-bin/jogo.cgi
 	sudo chmod 777 /usr/lib/cgi-bin/
 	sudo cp -R scripts/ /var/www/html/
+	sudo cp -R css/ /var/www/html/
 	sudo cp -R images/ /var/www/html/
 	touch install
 

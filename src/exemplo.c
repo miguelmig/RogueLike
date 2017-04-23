@@ -266,6 +266,7 @@ int main() {
 	//print_debug("game seed: %u", e.gameSeed);
 	INCLUIR_JQUERY;
 	INCLUIR_SCRIPT("roguelike.js");
+	INCLUIR_CSS("roguelike.css");
 
 	printf("<body onLoad=\"load();\">\n");
 	ABRIR_SVG(TAM * ESCALA , TAM * ESCALA);

@@ -1,0 +1,13 @@
+svg
+{
+    margin: auto;
+    display:block;
+}
+
+#restart
+{
+    margin-top: 15px;
+    position:relative;
+    top: 50%;
+    left: 50%;
+}

@@ -16,6 +16,11 @@ Macros úteis para gerar CGIs
 #define SCRIPT_PATH							"/scripts/"
 
 /**
+* Caminho para os stylesheets
+*/
+#define STYLE_PATH							"/css/"
+
+/**
 \brief Macro para começar o html
 */
 #define COMECAR_HTML						printf("Content-Type: text/html\n\n")
@@ -76,5 +81,15 @@ Macros úteis para gerar CGIs
 */
 #define INCLUIR_JQUERY						printf("<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js\"></script>")
 
-
+/**
+\brief Macro para incluir scripts
+@param script Nome do ficheiro dentro da pasta SCRIPT_PATH
+*/
 #define INCLUIR_SCRIPT(script)				printf("<script type=\"text/javascript\" src=\"%s\"></script>", SCRIPT_PATH script)
+
+
+/**
+\brief Macro para incluir ficheiros css
+@param script Nome do ficheiro dentro da pasta STYLE_PATH
+*/
+#define INCLUIR_CSS(sheet)			printf("<link rel = \"stylesheet\" type = \"text/css\" href = \"%s\">", STYLE_PATH sheet)
