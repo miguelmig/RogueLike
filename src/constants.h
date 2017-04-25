@@ -1,10 +1,10 @@
 #pragma once
 
-#define MIN_ENEMIES 20
-#define MAX_ENEMIES 30
+#define MIN_ENEMIES 5
+#define MAX_ENEMIES 10
 
 #define MIN_OBSTACLES 10
-#define MAX_OBSTACLES 15
+#define MAX_OBSTACLES 20
 
 #define TAM 10
 
