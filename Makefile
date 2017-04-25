@@ -22,7 +22,7 @@ doc:
 	doxygen
 
 clean:
-	rm -rf *.o exemplo Doxyfile latex html install
+	rm -rf src/*.o exemplo Doxyfile latex html install
 
 estado.o: estado.c
 exemplo.o: exemplo.c
