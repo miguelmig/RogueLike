@@ -46,6 +46,7 @@ typedef struct estado {
 	/* Estado sobre a textura de cada obstáculo */
 	char obstacleTextureOffset[TAM][TAM];
 
+	int level;
 } ESTADO;
 
 

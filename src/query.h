@@ -12,3 +12,4 @@ int parse_query(const char* query_string, ESTADO* e, int* change_turn);
 
 void create_move_query(int dx, int dy, char* destination);
 void create_exit_query(char* destination);
+void create_attack_query(int dx, int dy, char* destination);

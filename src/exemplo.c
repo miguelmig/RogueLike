@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "cgi.h"
 #include "estado.h"
@@ -58,7 +59,7 @@ int posicao_livre(int x, int y, ESTADO* e)
 	return 1;
 }
 
-ESTADO inicializar() {
+ESTADO inicializar(int level) {
 	ESTADO e = {{0}};
 	e.gameSeed = (unsigned int)time(0);
 	srand(e.gameSeed);
@@ -68,6 +69,7 @@ ESTADO inicializar() {
 
 	e.exit.x = 5;
 	e.exit.y = 0;
+	e.level = 1;
 
 	int num_inimigos = random_number(MIN_ENEMIES, MAX_ENEMIES - 1);
 	// Generate monster coords
@@ -129,12 +131,13 @@ ESTADO inicializar() {
 		for (x = 0; x < TAM; x++)
 		{
 			CellTypes cell_type = getCellTypeAtPosition(&e, x, y);
+			TileSets tileset = get_tileset_by_level(level);
 			switch (cell_type)
 			{
 			case OBSTACLE:
-				e.obstacleTextureOffset[x][y] = generateRandomObstacleOffset();
+				e.obstacleTextureOffset[x][y] = generateRandomObstacleOffset(tileset);
 			default:
-				e.tileTextureOffset[x][y] = generateRandomTileOffset();
+				e.tileTextureOffset[x][y] = generateRandomTileOffset(tileset);
 				break;
 			}
 		}
@@ -144,7 +147,6 @@ ESTADO inicializar() {
 }
 
 void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
-	ESTADO novo = e;
 	int x = e.jog.x + dx;
 	int y = e.jog.y + dy;
 	char link[MAX_BUFFER];
@@ -155,9 +157,6 @@ void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
 	{
 		return;
 	}
-	
-	novo.jog.x = x;
-	novo.jog.y = y;
 	create_move_query(dx, dy, link);
 	//sprintf(link, "?%s", estado2str(novo));
 	createArrowLink(orientation, x, y, link);
@@ -180,9 +179,37 @@ void imprime_movimentos(ESTADO e) {
 
 }
 
+
+void imprime_ataque(Orientations orientation, ESTADO e, int dx, int dy) 
+{
+	int x = e.jog.x + dx;
+	int y = e.jog.y + dy;
+	char link[MAX_BUFFER];
+
+	if (!posicao_valida(x, y) || posicao_livre(x, y, &e) || getCellTypeAtPosition(&e, x, y) != ENEMY)
+	{
+		return;
+	}
+
+	create_attack_query(dx, dy, link);
+	//sprintf(link, "?%s", estado2str(novo));
+	create_attack_link(orientation, x, y, link);
+}
+void imprime_ataques(ESTADO e)
+{
+	imprime_ataque(UP, e, 0, -1);
+
+	imprime_ataque(DOWN, e, 0, +1);
+
+	imprime_ataque(LEFT, e, -1, 0);
+
+	imprime_ataque(RIGHT, e, +1, 0);
+}
+
 void imprime_jogador(ESTADO e) {
 	IMAGEM(e.jog.x, e.jog.y, ESCALA, "DwellerN_03.png");
 	imprime_movimentos(e);
+	imprime_ataques(e);
 }
 
 void imprime_saida(ESTADO e)
@@ -209,7 +236,7 @@ void imprime_saida(ESTADO e)
 ESTADO ler_estado(char *args) {
 	if (args == NULL || strlen(args) == 0)
 	{
-		return inicializar();
+		return inicializar(1);
 	}
 
 	ESTADO resultado = str2estado(args);
@@ -237,7 +264,7 @@ ESTADO obter_estado()
 	int file_exists = read_state_from_file(STATE_FILE_NAME, &e);
 	if (!file_exists)
 	{
-		e = inicializar();
+		e = inicializar(1);
 		output_state_to_file(&e, STATE_FILE_NAME);
 	}
 
@@ -249,6 +276,95 @@ void imprimir_butao_restart()
 	printf("<button type=\"button\" id=restart >Restart</button>\n");
 }
 
+void mover_inimigos(ESTADO* e)
+{
+	int i, j;
+	for (i = 0; i < e->num_inimigos; i++)
+	{
+		int directions[5][2] = {
+			{ -1, 0 }, // Esquerda
+			{ 1, 0 }, // Direita
+			{ 0, 1 }, // Cima
+			{ 0, -1 }, // Baixo
+			{ 0, 0 } // Sem mexer
+		};
+
+		int x = e->inimigo[i].x;
+		int y = e->inimigo[i].y;
+		int available_directions = 5;
+		for (j = 0; j < available_directions; j++)
+		{
+			int dx = directions[j][0];
+			int dy = directions[j][1];
+
+			int new_x = x + dx;
+			int new_y = y + dy;
+
+			if (posicao_valida(new_x, new_y) == 0 || (posicao_livre(new_x, new_y, e) == 0 && !(new_y == y && new_x == x)))
+			{
+				for (int k = j; k < available_directions - 1; k++)
+				{
+					memcpy(directions[k], directions[k + 1], sizeof(int) * 2);
+				}
+
+				--available_directions;
+				j--;
+			}
+		}
+
+		// available_directions deve conter o numero de direcões validas para o inimigo se movimentar
+		if (available_directions == 0)
+			continue;
+
+		// Debug
+		/*
+		print_debug("Available directions: \n");
+		for (j = 0; j < available_directions; j++)
+		{
+			print_debug("(%d,%d) \t", directions[j][0], directions[j][1]);
+		}
+		*/
+
+		float minDistance = TAM * TAM;
+		int bestDirection = 0;
+		for (j = 0; j < available_directions; j++)
+		{
+			int dx = directions[j][0];
+			int dy = directions[j][1];
+			int new_x = x + dx;
+			int new_y = y + dy;
+			int player_x = e->jog.x;
+			int player_y = e->jog.y;
+
+			dx = player_x - new_x;
+			dy = player_y - new_y;
+			float distance = sqrtf((float)dx * dx + dy * dy);
+
+			if (minDistance > distance)
+			{
+				minDistance = distance;
+				bestDirection = j;
+			}
+		}
+
+		/*
+		srand(time(0));
+		int randomly_selected_direction = random_number(0, available_directions - 1);
+		*/
+		int dx = directions[bestDirection][0];
+		int dy = directions[bestDirection][1];
+		//print_debug("Best direction (%d, %d) \t Player Coordinates (%d,%d), ", dx, dy, e->jog.x, e->jog.y);
+
+		//print_debug("selected random direction(%d) from available(%d), dx %d, dy %d\n", randomly_selected_direction, available_directions, dx, dy);
+
+		int new_x = x + dx;
+		int new_y = y + dy;
+
+		e->inimigo[i].x = new_x;
+		e->inimigo[i].y = new_y;
+	}
+}
+
 
 int main() {
 	int x, y;
@@ -258,6 +374,29 @@ int main() {
 	COMECAR_HTML;
 	int change_turn = 0;
 	int state_changed = parse_query(getenv("QUERY_STRING"), &e, &change_turn);
+	if (change_turn)
+	{
+		mover_inimigos(&e);
+		/*
+		for (i = 0; i < e.num_inimigos; i++)
+		{
+			int dx = random_number(0, 2) - 1;
+			int dy = random_number(0, 2) - 1;
+			int x = e.inimigo[i].x + dx;
+			int y = e.inimigo[i].y + dy;
+			while (dx + dy == 0 || posicao_valida(x, y) == 0 || posicao_livre(x, y, &e) == 0)
+			{
+				dx = random_number(0, 2) - 1;
+				dy = random_number(0, 0) - 1;
+				x = e.inimigo[i].x + dx;
+				y = e.inimigo[i].y + dy;
+			}
+
+			e.inimigo[i].x = x;
+			e.inimigo[i].y = y;
+		}
+		*/
+	}
 	if (state_changed)
 	{
 		output_state_to_file(&e, STATE_FILE_NAME);
@@ -274,8 +413,8 @@ int main() {
 		for(x = 0; x < TAM; x++)
 			imprime_casa(&e, x, y);
 
-	imprime_jogador(e);
 	imprime_inimigos(e);
+	imprime_jogador(e);
 	imprime_obstaculos(e);
 	imprime_saida(e);
 	FECHAR_SVG;

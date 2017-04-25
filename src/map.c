@@ -6,6 +6,7 @@
 #include <string.h> // strdup
 #include "estado.h"
 
+
 static const char imageDirectory[] = "/images/";
 #ifdef _WIN32
 #define strdup _strdup
@@ -30,26 +31,34 @@ static const char* assetFileNames[] =
 
 };
 
-#define TILE_NUM_ASSETS 3
-static const char* tileFileNames[TILE_NUM_ASSETS] =
-{
-	/*
-	"dungeon_floor_normal.png",
-	"dungeon_floor_normal2.png",
-	"dungeon_floor_broken.png",
-	"dungeon_floor_broken2.png",
+#define BLACK_TILESET_FLOOR_NUM_ASSETS 4
 
-	*/
-	
+/*
+static const char* tileFileNames[BLACK_TILESET_FLOOR_NUM_ASSETS] =
+{
 	
 	"black_stone_floor.png",
 	"black_stone_floor2.png",
 	"black_stone_floor_broken.png"
-	
+
 };
 
-#define OBSTACLE_NUM_ASSETS 4
-static const char* obstacleFileNames[OBSTACLE_NUM_ASSETS] =
+*/
+
+#define DUNGEON_TILESET_FLOOR_NUM_ASSETS 6
+/*
+static const char* dungeonFileNames[DUNGEON_TILESET_FLOOR_NUM_ASSETS] =
+{
+	"dungeon_floor_normal.png",
+	"dungeon_floor_normal2.png",
+	"dungeon_floor_broken.png",
+	"dungeon_floor_broken2.png",
+};
+*/
+
+#define BLACK_TILESET_OBSTACLE_NUM_ASSETS 4
+/*
+static const char* obstacleFileNames[BLACK_TILESET_OBSTACLE_NUM_ASSETS] =
 {
 	"big_rock_default2.png",
 	"lava_pool.png",
@@ -57,8 +66,10 @@ static const char* obstacleFileNames[OBSTACLE_NUM_ASSETS] =
 	"big_rock2.png",
 };
 
+*/
 
-static const char* orientationFileNames[] =
+
+static const char* orientationMoveFileNames[] =
 {
 	"left_arrow.png",
 	"right_arrow.png",
@@ -66,7 +77,7 @@ static const char* orientationFileNames[] =
 	"down_arrow.png",
 };
 
-static const char* orientationIds[] = 
+static const char* orientationMoveIds[] = 
 {
 	"arrow-left",
 	"arrow-right",
@@ -74,12 +85,91 @@ static const char* orientationIds[] =
 	"arrow-down",
 };
 
+static const char* orientationAttackFileNames[] =
+{
+	"attack_sword.png",
+	"attack_sword.png",
+	"attack_sword.png",
+	"attack_sword.png",
+};
+
+static const char* orientationAttackIds[] =
+{
+	"attack-left",
+	"attack-right",
+	"attack-up",
+	"attack-down",
+};
+
+#define TILESET_NUM 3
+static const TileSetData tileSets[TILESET_NUM] =
+{
+	{
+		"Black Tileset",
+		{
+			"big_rock_default2.png",
+			"lava_pool.png",
+			"fall_pit.png",
+			"big_rock2.png",
+		},
+		BLACK_TILESET_OBSTACLE_NUM_ASSETS,
+		{
+			"black_stone_floor.png",
+			"black_stone_floor.png",
+			"black_stone_floor2.png",
+			"black_stone_floor_broken.png"
+		}, 
+		BLACK_TILESET_FLOOR_NUM_ASSETS
+	},
+
+	{
+		"Dungeon Tileset",
+		{
+			"big_rock_default2.png",
+			"lava_pool.png",
+			"fall_pit.png",
+			"big_rock2.png",
+		}, 
+		BLACK_TILESET_OBSTACLE_NUM_ASSETS,
+		{
+			"dungeon_floor_normal.png",
+			"dungeon_floor_normal.png",
+			"dungeon_floor_normal.png",
+			"dungeon_floor_normal2.png",
+			"dungeon_floor_broken.png",
+			"dungeon_floor_broken2.png",
+		}, 
+		DUNGEON_TILESET_FLOOR_NUM_ASSETS,
+	},
+
+	{
+		"Dirt Tileset",
+		{
+			"big_rock4.png",
+			"pots.png",
+			"isaac_pot.png",
+			"isaac_shroom.png",
+		},
+		4,
+		{
+			"dirt_floor_normal.png",
+			"dirt_floor_normal.png",
+			"dirt_floor_normal.png",
+			"dirt_floor_broken.png",
+			"dirt_floor_broken.png",
+			"dirt_floor_broken2.png",
+		},
+		6,
+	},
+
+};
+
 const char* getImagesAssetDirectory()
 {
 	return imageDirectory;
 }
 
-const char* getAssetFileName(CellTypes cell, unsigned char tileOffset)
+const char* getAssetFileName(CellTypes cell, unsigned char tileOffset, TileSetData tileset)
 {
 	char full_path[256] = { 0 };
 	CellTypes cellType = cell;
@@ -87,24 +177,28 @@ const char* getAssetFileName(CellTypes cell, unsigned char tileOffset)
 	switch (cellType)
 	{
 	case EMPTY:
-		sprintf(full_path, "%s%s", tileSubDirectory, tileFileNames[tileOffset]);
+		sprintf(full_path, "%s%s", tileSubDirectory, tileset.floor_file_names[tileOffset]);
 		return strdup(full_path);
 	case OBSTACLE:
-		sprintf(full_path, "%s%s", obstacleSubDirectory, obstacleFileNames[tileOffset]);
+		sprintf(full_path, "%s%s", obstacleSubDirectory, tileset.obstacles_file_names[tileOffset]);
 		return strdup(full_path);
 	default:
 		return strdup(assetFileNames[cellType]);
 	}
 }
 
-char generateRandomTileOffset()
+char generateRandomTileOffset(TileSets tileset)
 {
-	return random_number(0, TILE_NUM_ASSETS - 1);
+	TileSetData data = tileSets[tileset];
+
+	return random_number(0, data.number_of_floor_tiles - 1);
 }
 
-char generateRandomObstacleOffset()
+char generateRandomObstacleOffset(TileSets tileset)
 {
-	return random_number(0, OBSTACLE_NUM_ASSETS - 1);
+	TileSetData data = tileSets[tileset];
+
+	return random_number(0, data.number_of_obstacle_tiles - 1);
 }
 
 CellTypes getCellTypeAtPosition(ESTADO* e, int x, int y)
@@ -136,11 +230,18 @@ CellTypes getCellTypeAtPosition(ESTADO* e, int x, int y)
 	return EMPTY;
 }
 
+TileSetData get_tile_set_data(int level)
+{
+	TileSets tileset = get_tileset_by_level(level);
+	return tileSets[tileset];
+}
+
 void draw_tile(ESTADO* e, int x, int y)
 {
 	const char* base_directory = getImagesAssetDirectory();
 	char offset = e->tileTextureOffset[x][y];
-	const char* asset_file_name = getAssetFileName(EMPTY, offset);
+	TileSetData data = get_tile_set_data(e->level);
+	const char* asset_file_name = getAssetFileName(EMPTY, offset, data);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
@@ -151,7 +252,8 @@ void draw_obstacle(ESTADO* e, int x, int y)
 {
 	const char* base_directory = getImagesAssetDirectory();
 	char offset = e->obstacleTextureOffset[x][y];
-	const char* asset_file_name = getAssetFileName(OBSTACLE, offset);
+	TileSetData data = get_tile_set_data(e->level);
+	const char* asset_file_name = getAssetFileName(OBSTACLE, offset, data);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
@@ -161,7 +263,7 @@ void draw_obstacle(ESTADO* e, int x, int y)
 
 void createArrowLink(Orientations orientation, int x, int y, const char* link)
 {
-	const char* orientation_id = orientationIds[orientation];
+	const char* orientation_id = orientationMoveIds[orientation];
 	printf("<a id=%s xlink:href=%s>\n", orientation_id, link);
 	drawArrow(orientation, x, y);
 	printf("</a>\n");
@@ -170,10 +272,44 @@ void createArrowLink(Orientations orientation, int x, int y, const char* link)
 void drawArrow(Orientations orientation, int x, int y)
 {
 	const char* base_directory = getImagesAssetDirectory();
-	const char* asset_file_name = orientationFileNames[orientation];
+	const char* asset_file_name = orientationMoveFileNames[orientation];
 
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
+}
+
+
+void create_attack_link(Orientations orientation, int x, int y, const char* link)
+{
+	const char* orientation_id = orientationAttackIds[orientation];
+	printf("<a id=%s xlink:href=%s>\n", orientation_id, link);
+	draw_attack_image(orientation, x, y);
+	printf("</a>\n");
+}
+
+void draw_attack_image(Orientations orientation, int x, int y)
+{
+	const char* base_directory = getImagesAssetDirectory();
+	const char* asset_file_name = orientationAttackFileNames[orientation];
+
+	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
+		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
+}
+
+void onKillEnemy(ESTADO* e, int index)
+{
+	int max = e->num_inimigos;
+	int i;
+	for (i = index; i <= max - 2; i++)
+	{
+		e->inimigo[i] = e->inimigo[i + 1];
+	}
+	e->num_inimigos--;
+}
+
+TileSets get_tileset_by_level(int level)
+{
+	return (TileSets)(level % TILESET_NUM);
 }
 
 /*
