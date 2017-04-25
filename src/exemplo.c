@@ -377,26 +377,8 @@ int main() {
 	if (change_turn)
 	{
 		mover_inimigos(&e);
-		/*
-		for (i = 0; i < e.num_inimigos; i++)
-		{
-			int dx = random_number(0, 2) - 1;
-			int dy = random_number(0, 2) - 1;
-			int x = e.inimigo[i].x + dx;
-			int y = e.inimigo[i].y + dy;
-			while (dx + dy == 0 || posicao_valida(x, y) == 0 || posicao_livre(x, y, &e) == 0)
-			{
-				dx = random_number(0, 2) - 1;
-				dy = random_number(0, 0) - 1;
-				x = e.inimigo[i].x + dx;
-				y = e.inimigo[i].y + dy;
-			}
-
-			e.inimigo[i].x = x;
-			e.inimigo[i].y = y;
-		}
-		*/
 	}
+
 	if (state_changed)
 	{
 		output_state_to_file(&e, STATE_FILE_NAME);

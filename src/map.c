@@ -260,7 +260,6 @@ void draw_obstacle(ESTADO* e, int x, int y)
 	free((void*)asset_file_name);
 }
 
-
 void createArrowLink(Orientations orientation, int x, int y, const char* link)
 {
 	const char* orientation_id = orientationMoveIds[orientation];

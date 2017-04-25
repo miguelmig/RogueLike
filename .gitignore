@@ -95,6 +95,8 @@ TestClient/
 *.o
 src/*.o
 
+*.bat
+
 *.zip
 exemplo
 install
