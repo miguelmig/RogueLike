@@ -69,7 +69,7 @@ ESTADO inicializar(int level) {
 
 	e.exit.x = 5;
 	e.exit.y = 0;
-	e.level = 1;
+	e.level = level;
 
 	int num_inimigos = random_number(MIN_ENEMIES, MAX_ENEMIES - 1);
 	// Generate monster coords
@@ -89,19 +89,8 @@ ESTADO inicializar(int level) {
 		e.inimigo[i].y = y;
 	}
 
-	/*
-	e.num_inimigos = 3;
-	e.inimigo[0].x = 3;
-	e.inimigo[0].y = 2;
-	e.inimigo[1].x = 7;
-	e.inimigo[1].y = 3;
-	e.inimigo[2].x = 4;
-	e.inimigo[2].y = 5;
-	*/
-
-
 	int num_obstacles = random_number(MIN_OBSTACLES, MAX_OBSTACLES - 1);
-	// Generate monster coords
+	// Generate obstacles coords
 	for (i = 0; num_obstacles != 0; num_obstacles--, e.num_obstaculos++, i++)
 	{
 		int x = random_number(0, TAM - 1);
@@ -116,14 +105,6 @@ ESTADO inicializar(int level) {
 		e.obstaculo[i].x = x;
 		e.obstaculo[i].y = y;
 	}
-
-	/*
-	e.num_obstaculos = 2;
-	e.obstaculo[0].x = 8;
-	e.obstaculo[0].y = 1;
-	e.obstaculo[1].x = 4;
-	e.obstaculo[1].y = 6;
-	*/
 
 	int x, y;
 	for (y = 0; y < TAM; y++)
@@ -276,6 +257,12 @@ void imprimir_butao_restart()
 	printf("<button type=\"button\" id=restart >Restart</button>\n");
 }
 
+void imprimir_score_board(int score)
+{
+	printf("<div id=\"scoreboard\"><span id=score>Pontuação: %d</span></div>\n",
+		score); 
+}
+
 void mover_inimigos(ESTADO* e)
 {
 	int i, j;
@@ -390,6 +377,7 @@ int main() {
 	INCLUIR_CSS("roguelike.css");
 
 	printf("<body onLoad=\"load();\">\n");
+	imprimir_score_board(e.score);
 	ABRIR_SVG(TAM * ESCALA , TAM * ESCALA);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
@@ -400,10 +388,10 @@ int main() {
 	imprime_obstaculos(e);
 	imprime_saida(e);
 	FECHAR_SVG;
-	printf("</body>");
-
 
 	imprimir_butao_restart();
+	printf("</body>");
+
 	
 	return 0;
 }

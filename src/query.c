@@ -3,6 +3,7 @@
 #include "estado.h"
 #include "utils.h"
 #include "map.h"
+#include <math.h>
 #include <stdio.h>
 
 #define MAX_BUFFER		10240
@@ -19,6 +20,16 @@ int parse_move_action(const char* move_query_string, ESTADO* e)
 	int dx, dy;
 	int num_elements_filled = sscanf(move_query_string, "x=%d&y=%d", &dx, &dy);
 	if (num_elements_filled != 2)
+	{
+		return 0;
+	}
+
+	if (abs(dx) + abs(dy) > 1)
+	{
+		return 0;
+	}
+
+	if (getCellTypeAtPosition(e, e->jog.x + dx, e->jog.y + dy) != EMPTY)
 	{
 		return 0;
 	}
@@ -43,6 +54,7 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 
 	ESTADO novo = inicializar(++e->level);
 	novo.level = e->level;
+	novo.score = e->score;
 	*e = novo;
 	e->jog.x = dx;
 	e->jog.y = dy;

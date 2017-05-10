@@ -13,7 +13,6 @@ Definição do estado e das funções que convertem estados em strings e vice-ve
 /** \brief O nº máximo de obstáculos */
 #define MAX_OBSTACULOS		100
 
-
 /**
 \brief Estrutura que armazena uma posição
 */
@@ -45,8 +44,10 @@ typedef struct estado {
 	char tileTextureOffset[TAM][TAM];
 	/* Estado sobre a textura de cada obstáculo */
 	char obstacleTextureOffset[TAM][TAM];
-
+	/* Nivel de progresso atual do jogo */
 	int level;
+	/* Pontuação do jogo atual*/
+	int score;
 } ESTADO;
 
 
