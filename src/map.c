@@ -212,7 +212,7 @@ CellTypes getCellTypeAtPosition(ESTADO* e, int x, int y)
 	// Check against enemies coords
 	for (i = 0; i < e->num_inimigos; ++i)
 	{
-		if (e->inimigo[i].x == x && e->inimigo[i].y == y)
+		if (e->inimigo[i].pos.x == x && e->inimigo[i].pos.y == y)
 			return ENEMY;
 	}
 

@@ -21,13 +21,27 @@ typedef struct posicao {
 	char y;
 } POSICAO;
 
+typedef struct jogador
+{
+	POSICAO pos;
+	int current_health;
+	int max_health;
+} JOGADOR;
+
+typedef struct inimigo
+{
+	POSICAO pos;
+	int current_health;
+	int max_health;
+} INIMIGO;
+
 /**
 \brief Estrutura que armazena o estado do jogo
 */
 
 typedef struct estado {
 	/** A posição do jogador */
-	POSICAO jog;
+	JOGADOR jog;
 	/** A posição da saida */
 	POSICAO exit;
 	/** O nº de inimigos */
@@ -35,7 +49,7 @@ typedef struct estado {
 	/** O nº de obstáculos */
 	char num_obstaculos;
 	/** Array com a posição dos inimigos */
-	POSICAO inimigo[MAX_INIMIGOS];
+	INIMIGO inimigo[MAX_INIMIGOS];
 	/** Array com a posição dos obstáculos */
 	POSICAO obstaculo[MAX_OBSTACULOS];
 	/** Seed necessária para a função rand() */

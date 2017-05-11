@@ -18,4 +18,9 @@
 #define KILL_SCORE_BONUS 300
 #define NEW_LEVEL_SCORE_BONUS 500
 
+/** \brief O nº de pontuações máximas a guardar */
+#define HIGHSCORE_SAVE_COUNT 3
+
+/** \brief Nome do ficheiro onde vão ser guardados os highscores */
+#define HIGHSCORES_FILE_NAME "highscores.txt"
 

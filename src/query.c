@@ -10,6 +10,7 @@
 #define CMP(str)		else if(strcmp(buffer, str) == 0)
 
 ESTADO inicializar(int level);
+void on_game_over(ESTADO* e);
 
 int parse_move_action(const char* move_query_string, ESTADO* e)
 {
@@ -29,13 +30,13 @@ int parse_move_action(const char* move_query_string, ESTADO* e)
 		return 0;
 	}
 
-	if (getCellTypeAtPosition(e, e->jog.x + dx, e->jog.y + dy) != EMPTY)
+	if (getCellTypeAtPosition(e, e->jog.pos.x + dx, e->jog.pos.y + dy) != EMPTY)
 	{
 		return 0;
 	}
 
-	e->jog.x += dx;
-	e->jog.y += dy;
+	e->jog.pos.x += dx;
+	e->jog.pos.y += dy;
 	return 1;
 }
 
@@ -56,8 +57,8 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 	novo.level = e->level;
 	novo.score = e->score;
 	*e = novo;
-	e->jog.x = dx;
-	e->jog.y = dy;
+	e->jog.pos.x = dx;
+	e->jog.pos.y = dy;
 	return 1;
 }
 
@@ -76,12 +77,12 @@ int parse_attack_action(const char* attack_query_string, ESTADO* e)
 
 	int i;
 
-	int command_x = e->jog.x + dx;
-	int command_y = e->jog.y + dy;
+	int command_x = e->jog.pos.x + dx;
+	int command_y = e->jog.pos.y + dy;
 	for (i = 0; i < e->num_inimigos; i++)
 	{
-		int monster_x = e->inimigo[i].x;
-		int monster_y = e->inimigo[i].y;
+		int monster_x = e->inimigo[i].pos.x;
+		int monster_y = e->inimigo[i].pos.y;
 
 		if (monster_x == command_x && command_y == monster_y)
 		{
@@ -146,6 +147,7 @@ int parse_query(const char* query_string, ESTADO* e, int* change_turn)
 	}
 	CMP("restart")
 	{
+		on_game_over(e);
 		ESTADO novo = inicializar(1);
 		*e = novo;
 		*change_turn = 0;

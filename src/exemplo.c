@@ -37,7 +37,7 @@ int posicao_livre(int x, int y, ESTADO* e)
 	// Check against enemies coords
 	for (i = 0; i < e->num_inimigos; ++i)
 	{
-		if (e->inimigo[i].x == x && e->inimigo[i].y == y)
+		if (e->inimigo[i].pos.x == x && e->inimigo[i].pos.y == y)
 			return 0;
 	}
 
@@ -49,7 +49,7 @@ int posicao_livre(int x, int y, ESTADO* e)
 	}
 
 	// Check against player's coords
-	if (x == e->jog.x && y == e->jog.y)
+	if (x == e->jog.pos.x && y == e->jog.pos.y)
 		return 0;
 
 	// Check against exit's coords
@@ -64,8 +64,11 @@ ESTADO inicializar(int level) {
 	e.gameSeed = (unsigned int)time(0);
 	srand(e.gameSeed);
 
-	e.jog.x = PLAYER_START_X;
-	e.jog.y = PLAYER_START_Y;
+	e.jog.pos.x = PLAYER_START_X;
+	e.jog.pos.y = PLAYER_START_Y;
+
+	e.jog.current_health = 100;
+	e.jog.max_health = 100;
 
 	e.exit.x = 5;
 	e.exit.y = 0;
@@ -85,8 +88,8 @@ ESTADO inicializar(int level) {
 			y = random_number(0, TAM - 1);
 		}
 
-		e.inimigo[i].x = x;
-		e.inimigo[i].y = y;
+		e.inimigo[i].pos.x = x;
+		e.inimigo[i].pos.y = y;
 	}
 
 	int num_obstacles = random_number(MIN_OBSTACLES, MAX_OBSTACLES - 1);
@@ -128,8 +131,8 @@ ESTADO inicializar(int level) {
 }
 
 void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
-	int x = e.jog.x + dx;
-	int y = e.jog.y + dy;
+	int x = e.jog.pos.x + dx;
+	int y = e.jog.pos.y + dy;
 	char link[MAX_BUFFER];
 	if(!posicao_valida(x, y))
 		return;
@@ -163,8 +166,8 @@ void imprime_movimentos(ESTADO e) {
 
 void imprime_ataque(Orientations orientation, ESTADO e, int dx, int dy) 
 {
-	int x = e.jog.x + dx;
-	int y = e.jog.y + dy;
+	int x = e.jog.pos.x + dx;
+	int y = e.jog.pos.y + dy;
 	char link[MAX_BUFFER];
 
 	if (!posicao_valida(x, y) || posicao_livre(x, y, &e) || getCellTypeAtPosition(&e, x, y) != ENEMY)
@@ -188,14 +191,14 @@ void imprime_ataques(ESTADO e)
 }
 
 void imprime_jogador(ESTADO e) {
-	IMAGEM(e.jog.x, e.jog.y, ESCALA, "DwellerN_03.png");
+	IMAGEM(e.jog.pos.x, e.jog.pos.y, ESCALA, "DwellerN_03.png");
 	imprime_movimentos(e);
 	imprime_ataques(e);
 }
 
 void imprime_saida(ESTADO e)
 {
-	if (abs(e.jog.x - e.exit.x) + abs(e.jog.y - e.exit.y) <= 1)
+	if (abs(e.jog.pos.x - e.exit.x) + abs(e.jog.pos.y - e.exit.y) <= 1)
 	{
 		char link[MAX_BUFFER];
 		/*
@@ -228,7 +231,7 @@ ESTADO ler_estado(char *args) {
 void imprime_inimigos(ESTADO e) {
 	int i;
 	for(i = 0; i < e.num_inimigos; i++)
-		IMAGEM(e.inimigo[i].x, e.inimigo[i].y, ESCALA, "Driders_04.png");
+		IMAGEM(e.inimigo[i].pos.x, e.inimigo[i].pos.y, ESCALA, "Driders_04.png");
 }
 
 void imprime_obstaculos(ESTADO e) {
@@ -257,11 +260,65 @@ void imprimir_butao_restart()
 	printf("<button type=\"button\" id=restart >Restart</button>\n");
 }
 
-void imprimir_score_board(int score)
+void imprimir_score_board(int score, int* highscores)
 {
-	printf("<div id=\"scoreboard\"><span id=score>Pontuação: %d</span></div>\n",
+	printf("<div id=\"scoreboard\">\n");
+	printf("<div id=\"highscores\">\n");
+	 
+	printf("<span id=highscore_title>Pontuações Máximas</span>\n");  
+	for (int i = 0; i < HIGHSCORE_SAVE_COUNT; i++)
+	{
+		printf("<span id=highscore%d class=text>%d</span>\n", i, highscores[i]);
+	}
+	printf("</div>\n");
+
+	printf("<span id=score>Pontuação Atual: %d</span></div>\n",
 		score); 
+
+
 }
+
+int ler_highscores(int* highscore_array)
+{
+	if (highscore_array == NULL)
+	{
+		return 0;
+	}
+
+	FILE* f = fopen(HIGHSCORES_FILE_NAME, "rb");
+	if (f == NULL)
+	{
+		return 0;
+	}
+
+	static char buffer[MAX_BUFFER];
+	fread(buffer, sizeof(char), MAX_BUFFER, f);
+	fclose(f);
+
+	sscanf(buffer, "%d %d %d", &highscore_array[0], &highscore_array[1], &highscore_array[2]);
+	return 1;
+}
+
+void guardar_highscores(int* highscore_array)
+{
+	if (highscore_array == NULL)
+	{
+		return;
+	}
+
+	FILE* f = fopen(HIGHSCORES_FILE_NAME, "wb");
+	if (f == NULL)
+	{
+		return;
+	}
+
+	static char buffer[MAX_BUFFER];
+	int len = sprintf(buffer, "%d %d %d", highscore_array[0], highscore_array[1], highscore_array[2]);
+
+	fwrite((const void*)buffer, sizeof(char), len, f);
+	fclose(f);
+}
+
 
 void mover_inimigos(ESTADO* e)
 {
@@ -276,8 +333,8 @@ void mover_inimigos(ESTADO* e)
 			{ 0, 0 } // Sem mexer
 		};
 
-		int x = e->inimigo[i].x;
-		int y = e->inimigo[i].y;
+		int x = e->inimigo[i].pos.x;
+		int y = e->inimigo[i].pos.y;
 		int available_directions = 5;
 		for (j = 0; j < available_directions; j++)
 		{
@@ -320,8 +377,8 @@ void mover_inimigos(ESTADO* e)
 			int dy = directions[j][1];
 			int new_x = x + dx;
 			int new_y = y + dy;
-			int player_x = e->jog.x;
-			int player_y = e->jog.y;
+			int player_x = e->jog.pos.x;
+			int player_y = e->jog.pos.y;
 
 			dx = player_x - new_x;
 			dy = player_y - new_y;
@@ -347,11 +404,49 @@ void mover_inimigos(ESTADO* e)
 		int new_x = x + dx;
 		int new_y = y + dy;
 
-		e->inimigo[i].x = new_x;
-		e->inimigo[i].y = new_y;
+		e->inimigo[i].pos.x = new_x;
+		e->inimigo[i].pos.y = new_y;
 	}
 }
 
+void highscore_update(int* highscores, int pos, int value)
+{
+	for (int i = pos; i < HIGHSCORE_SAVE_COUNT - 1; i++)
+	{
+		highscores[i + 1] = highscores[i];
+	}
+	highscores[pos] = value;
+} 
+
+int is_game_over(ESTADO* e)
+{
+	if (e == NULL)
+	{
+		return 1;
+	}
+
+	return e->jog.current_health <= 0;
+}
+
+void on_game_over(ESTADO* e)
+{
+	if (e == NULL)
+	{
+		return;
+	}
+	int highscores[HIGHSCORE_SAVE_COUNT] = { 0 };
+	ler_highscores(highscores);
+	for (int i = 0; i < HIGHSCORE_SAVE_COUNT; i++)
+	{
+		if (e->score > highscores[i])
+		{
+			highscore_update(highscores, i, e->score);
+			break;
+		}
+	}
+
+	guardar_highscores(highscores);
+}
 
 int main() {
 	int x, y;
@@ -376,8 +471,26 @@ int main() {
 	INCLUIR_SCRIPT("roguelike.js");
 	INCLUIR_CSS("roguelike.css");
 
+	/* Pontuações */
+
+	int highscores[HIGHSCORE_SAVE_COUNT] = { 0 };
+	ler_highscores(highscores);
+	if (is_game_over(&e))
+	{
+		for (int i = 0; i < HIGHSCORE_SAVE_COUNT; i++)
+		{
+			if (e.score > highscores[i])
+			{
+				highscore_update(highscores, i, e.score);
+				break;
+			}
+		}
+	}
+
+	guardar_highscores(highscores);
+
 	printf("<body onLoad=\"load();\">\n");
-	imprimir_score_board(e.score);
+	imprimir_score_board(e.score, highscores);
 	ABRIR_SVG(TAM * ESCALA , TAM * ESCALA);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
@@ -391,7 +504,6 @@ int main() {
 
 	imprimir_butao_restart();
 	printf("</body>");
-
 	
 	return 0;
 }

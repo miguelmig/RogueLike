@@ -26,3 +26,19 @@ body
     top: 15%;
     display: inline-block;
 }
+
+#highscores
+{
+	border: 3px solid indianred;
+}
+
+#highscores .text
+{
+	display: block;
+	text-align: center;
+}
+
+#highscore_title
+{
+	font-weight: bold;
+}
