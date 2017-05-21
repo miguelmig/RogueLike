@@ -55,9 +55,9 @@ typedef struct estado {
 	/** Seed necessária para a função rand() */
 	unsigned int gameSeed;
 	/* Estado sobre a textura de cada casa */
-	char tileTextureOffset[TAM][TAM];
+	char tile_texture_offset[TAM][TAM];
 	/* Estado sobre a textura de cada obstáculo */
-	char obstacleTextureOffset[TAM][TAM];
+	char obstacle_texture_offset[TAM][TAM];
 	/* Nivel de progresso atual do jogo */
 	int level;
 	/* Pontuação do jogo atual*/

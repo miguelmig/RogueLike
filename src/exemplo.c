@@ -1,28 +1,23 @@
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <string.h> // memcpy
+#include <math.h> // for abs
+#include <time.h> // for time
 
 #include "cgi.h"
 #include "estado.h"
 #include "map.h"
-#include "time.h"
 #include "utils.h"
 #include "query.h"
 
 #define MAX_BUFFER		10240
 
-
-int posicao_valida(int x, int y) {
+int posicao_valida(int x, int y) 
+{
 	return x >= 0 && y >= 0 && x < TAM && y < TAM;
 }
 
-void imprime_casa(ESTADO* e, int x, int y) {
-	/*
-	char *cor[] = {"#666600", "#555500"};
-	int idx = (x + y) % 2;
-	QUADRADO(x, y,ESCALA, cor[idx]);
-	*/
-
+void imprime_casa(ESTADO* e, int x, int y) 
+{
 	draw_tile(e, x, y);
 }
 
@@ -67,11 +62,11 @@ ESTADO inicializar(int level) {
 	e.jog.pos.x = PLAYER_START_X;
 	e.jog.pos.y = PLAYER_START_Y;
 
-	e.jog.current_health = 100;
-	e.jog.max_health = 100;
+	e.jog.current_health = PLAYER_MAX_HEALTH;
+	e.jog.max_health = PLAYER_MAX_HEALTH;
 
-	e.exit.x = 5;
-	e.exit.y = 0;
+	e.exit.x = EXIT_X;
+	e.exit.y = EXIT_Y;
 	e.level = level;
 
 	int num_inimigos = random_number(MIN_ENEMIES, MAX_ENEMIES - 1);
@@ -119,9 +114,9 @@ ESTADO inicializar(int level) {
 			switch (cell_type)
 			{
 			case OBSTACLE:
-				e.obstacleTextureOffset[x][y] = generate_random_obstacle_offset(tileset);
+				e.obstacle_texture_offset[x][y] = generate_random_obstacle_offset(tileset);
 			default:
-				e.tileTextureOffset[x][y] = generate_random_tile_offset(tileset);
+				e.tile_texture_offset[x][y] = generate_random_tile_offset(tileset);
 				break;
 			}
 		}
@@ -185,6 +180,7 @@ void imprime_ataque(Orientations orientation, ESTADO e, int dx, int dy)
 	create_attack_query(dx, dy, link);
 	create_attack_link(orientation, x, y, link);
 }
+
 void imprime_ataques(ESTADO e)
 {
 	imprime_ataque(UP, e, 0, -1);
@@ -197,7 +193,7 @@ void imprime_ataques(ESTADO e)
 }
 
 void imprime_jogador(ESTADO e) {
-	IMAGEM(e.jog.pos.x, e.jog.pos.y, ESCALA, "DwellerN_03.png");
+	IMAGEM(e.jog.pos.x, e.jog.pos.y, ESCALA, PLAYER_IMAGE_FILE_NAME);
 	imprime_movimentos(e);
 	imprime_ataques(e);
 }
@@ -207,45 +203,33 @@ void imprime_saida(ESTADO e)
 	if (abs(e.jog.pos.x - e.exit.x) + abs(e.jog.pos.y - e.exit.y) <= 1)
 	{
 		char link[MAX_BUFFER];
-		/*
-		ESTADO novo = inicializar();
-		sprintf(link, "?%s", estado2str(novo));
-		*/
 		create_exit_query(link);
 		ABRIR_LINK_ADV(link, "exit", "exit");
-		IMAGEM(e.exit.x, e.exit.y, ESCALA, "trapdoor1.png");
+		IMAGEM(e.exit.x, e.exit.y, ESCALA, EXIT_IMAGE_FILE_NAME);
 		FECHAR_LINK;
 	}
 	else
 	{
-		IMAGEM(e.exit.x, e.exit.y, ESCALA, "trapdoor1.png");
+		IMAGEM(e.exit.x, e.exit.y, ESCALA, EXIT_IMAGE_FILE_NAME);
 	}
 
-}
-
-ESTADO ler_estado(char *args) {
-	if (args == NULL || strlen(args) == 0)
-	{
-		return inicializar(1);
-	}
-
-	ESTADO resultado = str2estado(args);
-	srand(resultado.gameSeed);
-	return resultado;
 }
 
 void imprime_inimigos(ESTADO e) {
 	int i;
-	for(i = 0; i < e.num_inimigos; i++)
-		IMAGEM(e.inimigo[i].pos.x, e.inimigo[i].pos.y, ESCALA, "Driders_04.png");
+	for (i = 0; i < e.num_inimigos; i++)
+	{
+		IMAGEM(e.inimigo[i].pos.x, e.inimigo[i].pos.y, ESCALA, ENEMY_IMAGE_FILE_NAME);
+	}
 }
 
 void imprime_obstaculos(ESTADO e) {
 
 	int i;
 	for (i = 0; i < e.num_obstaculos; i++)
-		//IMAGEM(e.obstaculo[i].x, e.obstaculo[i].y, ESCALA, "lava_pool1.png");
+	{
 		draw_obstacle(&e, e.obstaculo[i].x, e.obstaculo[i].y);
+	}
 }
 
 ESTADO obter_estado()
@@ -382,15 +366,6 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 		if (available_directions == 0)
 			continue;
 
-		// Debug
-		/*
-		print_debug("Available directions: \n");
-		for (j = 0; j < available_directions; j++)
-		{
-			print_debug("(%d,%d) \t", directions[j][0], directions[j][1]);
-		}
-		*/
-
 		float minDistance = TAM * TAM;
 		int bestDirection = 0;
 		for (j = 0; j < available_directions; j++)
@@ -413,15 +388,8 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 			}
 		}
 
-		/*
-		srand(time(0));
-		int randomly_selected_direction = random_number(0, available_directions - 1);
-		*/
 		int dx = directions[bestDirection][0];
 		int dy = directions[bestDirection][1];
-		//print_debug("Best direction (%d, %d) \t Player Coordinates (%d,%d), ", dx, dy, e->jog.x, e->jog.y);
-
-		//print_debug("selected random direction(%d) from available(%d), dx %d, dy %d\n", randomly_selected_direction, available_directions, dx, dy);
 
 		int new_x = x + dx;
 		int new_y = y + dy;
@@ -433,6 +401,7 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 		{
 			// Can attack
 			atacar_jogador(&e->inimigo[i], e, damage_done);
+			return;
 		}
 
 		e->inimigo[i].pos.x = new_x;
@@ -465,6 +434,8 @@ void on_game_over(ESTADO* e)
 	{
 		return;
 	}
+
+
 	int highscores[HIGHSCORE_SAVE_COUNT] = { 0 };
 	ler_highscores(highscores);
 	for (int i = 0; i < HIGHSCORE_SAVE_COUNT; i++)
@@ -477,11 +448,15 @@ void on_game_over(ESTADO* e)
 	}
 
 	guardar_highscores(highscores);
+
+	// Clear the board
+	*e = inicializar(1);
+	output_state_to_file(e, STATE_FILE_NAME);
 }
 
 int main() {
 	int x, y;
-	//ESTADO e = ler_estado(getenv("QUERY_STRING"));
+
 	ESTADO e = obter_estado();
 	
 	COMECAR_HTML;
@@ -509,21 +484,9 @@ int main() {
 	ler_highscores(highscores);
 	if (is_game_over(&e))
 	{
-		for (int i = 0; i < HIGHSCORE_SAVE_COUNT; i++)
-		{
-			if (e.score > highscores[i])
-			{
-				highscore_update(highscores, i, e.score);
-				break;
-			}
-		}
-
-		// Clear the board
-		e = inicializar(1);
-		output_state_to_file(&e, STATE_FILE_NAME);
+		on_game_over(&e);
 	}
 
-	guardar_highscores(highscores);
 
 	printf("<body onLoad=\"load();\">\n");
 	imprimir_score_board(e.score, highscores);
@@ -536,11 +499,13 @@ int main() {
 	imprime_jogador(e); 
 	imprime_obstaculos(e);   
 	imprime_saida(e);     
-	char linha[1024] = { 0 };
 
-	sprintf(linha, "Nível %d", e.level);
-	TEXTO(10, 1, ESCALA, linha);
-	FECHAR_SVG; 
+	char level_string[1024] = { 0 };
+
+	sprintf(level_string, "Nível %d", e.level);
+	TEXTO(10, 1, ESCALA, level_string);
+	FECHAR_SVG;
+
 	imprimir_health_bar(e.jog.current_health, e.jog.max_health);
 	imprimir_butao_restart(); 
 	if (damage_done)

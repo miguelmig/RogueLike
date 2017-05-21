@@ -78,7 +78,6 @@ Macros úteis para gerar CGIs
 @param id Identificador do link
 @param class_ Classe de identificação do link
 */
-
 #define ABRIR_LINK_ADV(link, id, class_)	printf("<a id=%s class=%s xlink:href=%s>\n", id, class_, link)
 
 /**

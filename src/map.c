@@ -7,7 +7,7 @@
 #include "estado.h"
 
 
-static const char imageDirectory[] = "/images/";
+static const char image_directory[] = "/images/";
 #ifdef _WIN32
 #define strdup _strdup
 #endif
@@ -15,61 +15,19 @@ static const char imageDirectory[] = "/images/";
 /**
  \brief Sub-directory containg any tile assets
 */
-static const char tileSubDirectory[] = "tiles/";
+static const char tile_sub_directory[] = "tiles/";
 
 /**
-\brief Sub-directory containg any tile assets
+\brief Sub-directory containg any obstacle assets
 */
-static const char obstacleSubDirectory[] = "obstacles/";
-
-static const char* assetFileNames[] =
-{
-	// Empty,
-	"floor3.png",
-	// Obstacle
-	"wall1.png",
-
-};
+static const char obstacle_sub_directory[] = "obstacles/";
 
 #define BLACK_TILESET_FLOOR_NUM_ASSETS 4
-
-/*
-static const char* tileFileNames[BLACK_TILESET_FLOOR_NUM_ASSETS] =
-{
-	
-	"black_stone_floor.png",
-	"black_stone_floor2.png",
-	"black_stone_floor_broken.png"
-
-};
-
-*/
-
 #define DUNGEON_TILESET_FLOOR_NUM_ASSETS 6
-/*
-static const char* dungeonFileNames[DUNGEON_TILESET_FLOOR_NUM_ASSETS] =
-{
-	"dungeon_floor_normal.png",
-	"dungeon_floor_normal2.png",
-	"dungeon_floor_broken.png",
-	"dungeon_floor_broken2.png",
-};
-*/
-
 #define BLACK_TILESET_OBSTACLE_NUM_ASSETS 4
-/*
-static const char* obstacleFileNames[BLACK_TILESET_OBSTACLE_NUM_ASSETS] =
-{
-	"big_rock_default2.png",
-	"lava_pool.png",
-	"fall_pit.png",
-	"big_rock2.png",
-};
-
-*/
 
 
-static const char* orientationMoveFileNames[] =
+static const char* move_file_names[] =
 {
 	"left_arrow.png",
 	"right_arrow.png",
@@ -77,7 +35,7 @@ static const char* orientationMoveFileNames[] =
 	"down_arrow.png",
 };
 
-static const char* orientationMoveIds[] = 
+static const char* move_ids[] = 
 {
 	"arrow-left",
 	"arrow-right",
@@ -85,7 +43,7 @@ static const char* orientationMoveIds[] =
 	"arrow-down",
 };
 
-static const char* orientationAttackFileNames[] =
+static const char* attack_file_names[] =
 {
 	"attack_sword.png",
 	"attack_sword.png",
@@ -93,7 +51,7 @@ static const char* orientationAttackFileNames[] =
 	"attack_sword.png",
 };
 
-static const char* orientationAttackIds[] =
+static const char* attack_ids[] =
 {
 	"attack-left",
 	"attack-right",
@@ -166,10 +124,10 @@ static const TileSetData tileSets[TILESET_NUM] =
 
 const char* get_images_asset_directory()
 {
-	return imageDirectory;
+	return image_directory;
 }
 
-const char* getAssetFileName(CellTypes cell, unsigned char tileOffset, TileSetData tileset)
+const char* get_asset_file_name(CellTypes cell, unsigned char tileOffset, TileSetData tileset)
 {
 	char full_path[256] = { 0 };
 	CellTypes cellType = cell;
@@ -177,13 +135,13 @@ const char* getAssetFileName(CellTypes cell, unsigned char tileOffset, TileSetDa
 	switch (cellType)
 	{
 	case EMPTY:
-		sprintf(full_path, "%s%s", tileSubDirectory, tileset.floor_file_names[tileOffset]);
+		sprintf(full_path, "%s%s", tile_sub_directory, tileset.floor_file_names[tileOffset]);
 		return strdup(full_path);
 	case OBSTACLE:
-		sprintf(full_path, "%s%s", obstacleSubDirectory, tileset.obstacles_file_names[tileOffset]);
+		sprintf(full_path, "%s%s", obstacle_sub_directory, tileset.obstacles_file_names[tileOffset]);
 		return strdup(full_path);
 	default:
-		return strdup(assetFileNames[cellType]);
+		return NULL;
 	}
 }
 
@@ -239,9 +197,9 @@ TileSetData get_tile_set_data(int level)
 void draw_tile(ESTADO* e, int x, int y)
 {
 	const char* base_directory = get_images_asset_directory();
-	char offset = e->tileTextureOffset[x][y];
+	char offset = e->tile_texture_offset[x][y];
 	TileSetData data = get_tile_set_data(e->level);
-	const char* asset_file_name = getAssetFileName(EMPTY, offset, data);
+	const char* asset_file_name = get_asset_file_name(EMPTY, offset, data);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
@@ -251,9 +209,9 @@ void draw_tile(ESTADO* e, int x, int y)
 void draw_obstacle(ESTADO* e, int x, int y)
 {
 	const char* base_directory = get_images_asset_directory();
-	char offset = e->obstacleTextureOffset[x][y];
+	char offset = e->obstacle_texture_offset[x][y];
 	TileSetData data = get_tile_set_data(e->level);
-	const char* asset_file_name = getAssetFileName(OBSTACLE, offset, data);
+	const char* asset_file_name = get_asset_file_name(OBSTACLE, offset, data);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
@@ -262,16 +220,16 @@ void draw_obstacle(ESTADO* e, int x, int y)
 
 void create_arrow_link(Orientations orientation, int x, int y, const char* link)
 {
-	const char* orientation_id = orientationMoveIds[orientation];
+	const char* orientation_id = move_ids[orientation];
 	printf("<a id=%s xlink:href=%s>\n", orientation_id, link);
 	draw_arrow_image(orientation, x, y);
-	printf("</a>\n");
+	FECHAR_LINK;
 }
 
 void draw_arrow_image(Orientations orientation, int x, int y)
 {
 	const char* base_directory = get_images_asset_directory();
-	const char* asset_file_name = orientationMoveFileNames[orientation];
+	const char* asset_file_name = move_file_names[orientation];
 
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
@@ -279,16 +237,16 @@ void draw_arrow_image(Orientations orientation, int x, int y)
 
 void create_attack_link(Orientations orientation, int x, int y, const char* link)
 {
-	const char* orientation_id = orientationAttackIds[orientation];
+	const char* orientation_id = attack_ids[orientation];
 	printf("<a id=%s xlink:href=%s>\n", orientation_id, link);
 	draw_attack_image(orientation, x, y);
-	printf("</a>\n");
+	FECHAR_LINK;
 }
 
 void draw_attack_image(Orientations orientation, int x, int y)
 {
 	const char* base_directory = get_images_asset_directory();
-	const char* asset_file_name = orientationAttackFileNames[orientation];
+	const char* asset_file_name = attack_file_names[orientation];
 
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
