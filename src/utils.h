@@ -8,3 +8,6 @@ void print_debug(const char* format, ...);
 
 */
 int random_number(int min, int max);
+
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))

@@ -322,7 +322,7 @@ void atacar_jogador(INIMIGO* enemy, ESTADO* e, int* damage_done)
 	}
 
 	//int jogador_health = e->jog.current_health;
-	*damage_done = min(PLAYER_MAX_HEALTH, e->level * 10);
+	*damage_done = MIN(PLAYER_MAX_HEALTH, e->level * 10);
 	e->jog.current_health -= *damage_done;
 }
 
