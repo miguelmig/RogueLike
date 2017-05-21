@@ -92,6 +92,41 @@ int parse_attack_action(const char* attack_query_string, ESTADO* e)
 		{
 			update_enemy_array(e, i);
 			e->score += KILL_SCORE_BONUS;
+			e->inimigos_mortos++;
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+int parse_potion_action(const char* potion_query_string, ESTADO* e)
+{
+	if (e == NULL)
+	{
+		return 0;
+	}
+	int dx, dy;
+	int num_elements_filled = sscanf(potion_query_string, "x=%d&y=%d", &dx, &dy);
+	if (num_elements_filled != 2)
+	{
+		return 0;
+	}
+
+	int i;
+
+	int command_x = e->jog.pos.x + dx;
+	int command_y = e->jog.pos.y + dy;
+	for (i = 0; i < e->num_pocoes; i++)
+	{
+		int potion_x = e->pocoes[i].x;
+		int potion_y = e->pocoes[i].y;
+
+		if (potion_x == command_x && command_y == potion_y)
+		{
+			update_potion_array(e, i);
+			e->jog.current_health = MIN(PLAYER_MAX_HEALTH, e->jog.current_health + POTION_HEALTH_AMOUNT);
+			e->pocoes_usadas++;
 			return 1;
 		}
 	}
@@ -158,6 +193,12 @@ int parse_query(const char* query_string, ESTADO* e, int* change_turn)
 		*change_turn = 0;
 		return 1;
 	}
+	CMP("potion")
+	{
+		parse_potion_action(params_start, e);
+		*change_turn = 0;
+		return 1;
+	}
 	return 0;
 }
 
@@ -177,4 +218,9 @@ void create_exit_query(char* destination)
 void create_attack_query(int dx, int dy, char* destination)
 {
 	sprintf(destination, "?attack&x=%d&y=%d", dx, dy);
+}
+
+void create_potion_query(int dx, int dy, char* destination)
+{
+	sprintf(destination, "?potion&x=%d&y=%d", dx, dy);
 }

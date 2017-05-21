@@ -43,6 +43,13 @@ int posicao_livre(int x, int y, ESTADO* e)
 			return 0;
 	}
 
+	// Check against potions coords
+	for (i = 0; i < e->num_pocoes; ++i)
+	{
+		if (e->pocoes[i].x == x && e->pocoes[i].y == y)
+			return 0;
+	}
+
 	// Check against player's coords
 	if (x == e->jog.pos.x && y == e->jog.pos.y)
 		return 0;
@@ -103,6 +110,26 @@ ESTADO inicializar(int level) {
 		e.obstaculo[i].x = x;
 		e.obstaculo[i].y = y;
 	}
+
+	int max_health_potions = level - 1; 
+	int num_potions = random_number(MIN_POCOES, max_health_potions);
+
+	// Generate potions coords
+	for (i = 0; num_potions != 0; num_potions--, e.num_pocoes++, i++)
+	{
+		int x = random_number(0, TAM - 1);
+		int y = random_number(0, TAM - 1);
+		// re-randomize coordinates until they are free
+		while (posicao_livre(x, y, &e) == 0)
+		{
+			x = random_number(0, TAM - 1);
+			y = random_number(0, TAM - 1);
+		}
+
+		e.pocoes[i].x = x;
+		e.pocoes[i].y = y;
+	}
+
 
 	int x, y;
 	for (y = 0; y < TAM; y++)
@@ -232,6 +259,30 @@ void imprime_obstaculos(ESTADO e) {
 	}
 }
 
+void imprime_pocoes(ESTADO* e)
+{
+	int i;
+	for (i = 0; i < e->num_pocoes; i++)
+	{
+		int potion_x = e->pocoes[i].x;
+		int potion_y = e->pocoes[i].y;
+		int player_x = e->jog.pos.x;
+		int player_y = e->jog.pos.y;
+		if (abs(player_x - potion_x) + abs(player_y - potion_y) <= 1)
+		{
+			char link[MAX_BUFFER];
+			int dx = potion_x - player_x;
+			int dy = potion_y - player_y; // 7 6 = 1
+			create_potion_query(dx, dy, link);
+			create_potion_link(potion_x, potion_y, link);
+		}
+		else
+		{
+			draw_potion_image(potion_x, potion_y);
+		}
+	}
+}
+
 ESTADO obter_estado()
 {
 	ESTADO e = {0};
@@ -254,7 +305,7 @@ void imprimir_butao_restart()
 	printf("<button type=\"button\" id=restart >Restart</button>\n");
 }
 
-void imprimir_score_board(int score, int* highscores)
+void imprimir_score_board(int* highscores, ESTADO* e)
 {
 	printf("<div id=\"scoreboard\">\n");
 	printf("<div id=\"highscores\">\n");
@@ -266,9 +317,16 @@ void imprimir_score_board(int score, int* highscores)
 	}
 	printf("</div>\n");
 
-	printf("<span id=score>Pontuação Atual: %d</span></div>\n",
-		score); 
+	printf("<p id=score>Pontuação Atual: %d</p>\n",
+		e->score); 
 
+	printf("<p id=enemies>Inimigos Mortos: %d </p>\n",
+		e->inimigos_mortos);
+
+	printf("<p id=potions>Poções Usadas: %d </p>\n",
+		e->pocoes_usadas);
+
+	printf("</div>\n");
 
 }
 
@@ -489,7 +547,7 @@ int main() {
 
 
 	printf("<body onLoad=\"load();\">\n");
-	imprimir_score_board(e.score, highscores);
+	imprimir_score_board(highscores, &e);
 	printf("<div class=center>");
 	printf("<span id=level> Nível %d</span>", e.level); 
 	ABRIR_SVG(TAM * ESCALA, TAM * ESCALA);
@@ -500,6 +558,7 @@ int main() {
 	imprime_inimigos(e);
 	imprime_jogador(e); 
 	imprime_obstaculos(e);   
+	imprime_pocoes(&e);
 	imprime_saida(e);
 	FECHAR_SVG;
 	imprimir_health_bar(e.jog.current_health, e.jog.max_health);

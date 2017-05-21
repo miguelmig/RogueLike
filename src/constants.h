@@ -8,6 +8,8 @@
 
 #define TAM 10
 
+#define MIN_POCOES 0
+
 #define ESCALA 40
 
 #define STATE_FILE_NAME "gamestate.txt"
@@ -38,3 +40,9 @@
 
 /** \brief Nome do ficheiro de imagem correspondente à saida */
 #define EXIT_IMAGE_FILE_NAME "trapdoor1.png"
+
+/** \brief Nome do ficheiro de imagem correspondente à saida */
+#define POTION_IMAGE_FILE_NAME "health_potion.png"
+
+/** \brief Quantidade de vida que uma poção regenera*/
+#define POTION_HEALTH_AMOUNT 50

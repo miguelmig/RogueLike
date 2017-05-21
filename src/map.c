@@ -252,6 +252,22 @@ void draw_attack_image(Orientations orientation, int x, int y)
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 }
 
+void create_potion_link(int x, int y, const char* link)
+{
+	printf("<a class=potion xlink:href=%s>\n", link);
+	draw_potion_image(x, y);
+	FECHAR_LINK;
+}
+
+void draw_potion_image(int x, int y)
+{
+	const char* base_directory = get_images_asset_directory();
+	const char* asset_file_name = POTION_IMAGE_FILE_NAME;
+
+	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
+		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
+}
+
 void update_enemy_array(ESTADO* e, int index)
 {
 	int max = e->num_inimigos;
@@ -261,6 +277,17 @@ void update_enemy_array(ESTADO* e, int index)
 		e->inimigo[i] = e->inimigo[i + 1];
 	}
 	e->num_inimigos--;
+}
+
+void update_potion_array(ESTADO* e, int index)
+{
+	int max = e->num_pocoes;
+	int i;
+	for (i = index; i <= max - 2; i++)
+	{
+		e->pocoes[i] = e->pocoes[i + 1];
+	}
+	e->num_pocoes--;
 }
 
 TileSets get_tileset_by_level(int level)

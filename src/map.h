@@ -50,7 +50,11 @@ void create_arrow_link(Orientations orientation, int x, int y, const char* link)
 void draw_arrow_image(Orientations orientation, int x, int y);
 void create_attack_link(Orientations orientation, int x, int y, const char* link);
 void draw_attack_image(Orientations orientation, int x, int y);
+
+void create_potion_link(int x, int y, const char* link);
+void draw_potion_image(int x, int y);
 void update_enemy_array(ESTADO* e, int index);
+void update_potion_array(ESTADO* e, int index);
 
 const char* get_images_asset_directory();
 

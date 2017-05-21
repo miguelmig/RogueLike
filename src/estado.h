@@ -13,6 +13,9 @@ Definição do estado e das funções que convertem estados em strings e vice-ve
 /** \brief O nº máximo de obstáculos */
 #define MAX_OBSTACULOS		100
 
+/** \brief O nº máximo de poções */
+#define MAX_POCOES 5
+
 /**
 \brief Estrutura que armazena uma posição
 */
@@ -48,10 +51,14 @@ typedef struct estado {
 	char num_inimigos;
 	/** O nº de obstáculos */
 	char num_obstaculos;
+	/** O nº de poções */
+	char num_pocoes;
 	/** Array com a posição dos inimigos */
 	INIMIGO inimigo[MAX_INIMIGOS];
 	/** Array com a posição dos obstáculos */
 	POSICAO obstaculo[MAX_OBSTACULOS];
+	/** Array com a posição das poções */
+	POSICAO pocoes[MAX_POCOES];
 	/** Seed necessária para a função rand() */
 	unsigned int gameSeed;
 	/* Estado sobre a textura de cada casa */
@@ -62,6 +69,10 @@ typedef struct estado {
 	int level;
 	/* Pontuação do jogo atual*/
 	int score;
+	/* Número de Inimigos Mortos */
+	int inimigos_mortos;
+	/* Número de Poções Usadas */
+	int pocoes_usadas;
 } ESTADO;
 
 
