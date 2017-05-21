@@ -501,11 +501,6 @@ int main() {
 	imprime_jogador(e); 
 	imprime_obstaculos(e);   
 	imprime_saida(e);
-	 
-	char level_string[1024] = { 0 };
-
-	//sprintf(level_string, "Nível %d", e.level);
-	//TEXTO(10, 1, ESCALA, level_string);
 	FECHAR_SVG;
 	imprimir_health_bar(e.jog.current_health, e.jog.max_health);
 	imprimir_butao_restart();
