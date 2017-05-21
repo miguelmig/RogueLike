@@ -82,7 +82,6 @@ function load()
         value = hBar.data('value');
     var barWidth = (value / total) * 100;
     bar.css('width', barWidth + "%");
-    console.log("printing bar size %d%%", barWidth);
 }
 
 function on_damage(damage)
@@ -109,6 +108,10 @@ function on_damage(damage)
       hit.css({'width': '0'});
       bar.css('width', barWidth + "%");
     }, 500);
-    console.log("ondmg: printing bar size %d%%", barWidth);
     //bar.css('width', total - value);
+}
+
+function on_game_over(score)
+{
+    alert("Perdeste o jogo com a pontuação de " + score + "!");
 }

@@ -76,6 +76,9 @@ ESTADO inicializar(int level) {
 	e.exit.y = EXIT_Y;
 	e.level = level;
 
+	int id = 0;
+	TileSets tileset = get_tileset_by_level(level);
+
 	int num_inimigos = random_number(MIN_ENEMIES, MAX_ENEMIES - 1);
 	// Generate monster coords
 	int i;
@@ -90,6 +93,9 @@ ESTADO inicializar(int level) {
 			y = random_number(0, TAM - 1);
 		}
 
+		e.inimigo[i].id = id;
+
+		e.enemy_texture_offset[id++] = generate_random_enemy_offset(tileset);
 		e.inimigo[i].pos.x = x;
 		e.inimigo[i].pos.y = y;
 	}
@@ -137,15 +143,13 @@ ESTADO inicializar(int level) {
 		for (x = 0; x < TAM; x++)
 		{
 			CellTypes cell_type = get_cell_type_at_pos(&e, x, y);
-			TileSets tileset = get_tileset_by_level(level);
 			switch (cell_type)
 			{
 			case OBSTACLE:
 				e.obstacle_texture_offset[x][y] = generate_random_obstacle_offset(tileset);
-			default:
-				e.tile_texture_offset[x][y] = generate_random_tile_offset(tileset);
 				break;
 			}
+			e.tile_texture_offset[x][y] = generate_random_tile_offset(tileset);
 		}
 	}
 
@@ -246,7 +250,7 @@ void imprime_inimigos(ESTADO e) {
 	int i;
 	for (i = 0; i < e.num_inimigos; i++)
 	{
-		IMAGEM(e.inimigo[i].pos.x, e.inimigo[i].pos.y, ESCALA, ENEMY_IMAGE_FILE_NAME);
+		draw_enemy(&e, e.inimigo[i].pos.x, e.inimigo[i].pos.y, e.inimigo[i].id);
 	}
 }
 
@@ -272,7 +276,7 @@ void imprime_pocoes(ESTADO* e)
 		{
 			char link[MAX_BUFFER];
 			int dx = potion_x - player_x;
-			int dy = potion_y - player_y; // 7 6 = 1
+			int dy = potion_y - player_y;
 			create_potion_query(dx, dy, link);
 			create_potion_link(potion_x, potion_y, link);
 		}
@@ -476,6 +480,11 @@ void highscore_update(int* highscores, int pos, int value)
 	highscores[pos] = value;
 } 
 
+void imprimir_game_over(ESTADO* e)
+{
+	printf("<script>on_game_over(%d)</script>", e->score);
+} 
+
 int is_game_over(ESTADO* e)
 {
 	if (e == NULL)
@@ -506,6 +515,9 @@ void on_game_over(ESTADO* e)
 	}
 
 	guardar_highscores(highscores);
+
+
+	imprimir_game_over(e);
 
 	// Clear the board
 	*e = inicializar(1);

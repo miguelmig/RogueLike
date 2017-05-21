@@ -33,6 +33,7 @@ typedef struct jogador
 
 typedef struct inimigo
 {
+	int id;
 	POSICAO pos;
 	int current_health;
 	int max_health;
@@ -65,6 +66,8 @@ typedef struct estado {
 	char tile_texture_offset[TAM][TAM];
 	/* Estado sobre a textura de cada obstáculo */
 	char obstacle_texture_offset[TAM][TAM];
+	/* Estado sobre a textura de cada inimigo */
+	char enemy_texture_offset[MAX_INIMIGOS];
 	/* Nivel de progresso atual do jogo */
 	int level;
 	/* Pontuação do jogo atual*/

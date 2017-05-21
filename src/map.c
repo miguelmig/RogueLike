@@ -22,6 +22,11 @@ static const char tile_sub_directory[] = "tiles/";
 */
 static const char obstacle_sub_directory[] = "obstacles/";
 
+/**
+\brief Sub-directory containg any enemy assets
+*/
+static const char enemy_sub_directory[] = "enemies/";
+
 #define BLACK_TILESET_FLOOR_NUM_ASSETS 4
 #define DUNGEON_TILESET_FLOOR_NUM_ASSETS 6
 #define BLACK_TILESET_OBSTACLE_NUM_ASSETS 4
@@ -77,7 +82,13 @@ static const TileSetData tileSets[TILESET_NUM] =
 			"black_stone_floor2.png",
 			"black_stone_floor_broken.png"
 		}, 
-		BLACK_TILESET_FLOOR_NUM_ASSETS
+		BLACK_TILESET_FLOOR_NUM_ASSETS,
+		{
+			"werecreature_25.png",
+			"werecreature_09.png",
+			"werecreature_20.png",
+		},
+		3
 	},
 
 	{
@@ -98,6 +109,13 @@ static const TileSetData tileSets[TILESET_NUM] =
 			"dungeon_floor_broken2.png",
 		}, 
 		DUNGEON_TILESET_FLOOR_NUM_ASSETS,
+		{
+			"Char_28.png",
+			"Char_59.png",
+			"character_02.png",
+			"characters-34.png"
+		},
+		4
 	},
 
 	{
@@ -118,6 +136,14 @@ static const TileSetData tileSets[TILESET_NUM] =
 			"dirt_floor_broken2.png",
 		},
 		6,
+		{
+			"Orc_04.png",
+			"Orc_03.png",
+			"Ogre_11.png",
+			"Orc_13.png",
+			"Orc_Bloodrager_02_hi.png",
+		},
+		5
 	},
 
 };
@@ -140,6 +166,9 @@ const char* get_asset_file_name(CellTypes cell, unsigned char tileOffset, TileSe
 	case OBSTACLE:
 		sprintf(full_path, "%s%s", obstacle_sub_directory, tileset.obstacles_file_names[tileOffset]);
 		return strdup(full_path);
+	case ENEMY:
+		sprintf(full_path, "%s%s", enemy_sub_directory, tileset.enemy_file_names[tileOffset]);
+		return strdup(full_path);
 	default:
 		return NULL;
 	}
@@ -157,6 +186,13 @@ char generate_random_obstacle_offset(TileSets tileset)
 	TileSetData data = tileSets[tileset];
 
 	return random_number(0, data.number_of_obstacle_tiles - 1);
+}
+
+char generate_random_enemy_offset(TileSets tileset)
+{
+	TileSetData data = tileSets[tileset];
+
+	return random_number(0, data.number_of_enemy_tiles - 1);
 }
 
 CellTypes get_cell_type_at_pos(ESTADO* e, int x, int y)
@@ -179,6 +215,13 @@ CellTypes get_cell_type_at_pos(ESTADO* e, int x, int y)
 	{
 		if (e->obstaculo[i].x == x && e->obstaculo[i].y == y)
 			return OBSTACLE;
+	}
+
+	// Check against potions coords
+	for (i = 0; i < e->num_pocoes; ++i)
+	{
+		if (e->pocoes[i].x == x && e->pocoes[i].y == y)
+			return POTION;
 	}
 
 	// Check against exit's coords
@@ -212,6 +255,18 @@ void draw_obstacle(ESTADO* e, int x, int y)
 	char offset = e->obstacle_texture_offset[x][y];
 	TileSetData data = get_tile_set_data(e->level);
 	const char* asset_file_name = get_asset_file_name(OBSTACLE, offset, data);
+	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
+		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
+
+	free((void*)asset_file_name);
+}
+
+void draw_enemy(ESTADO* e, int x, int y, int id)
+{
+	const char* base_directory = get_images_asset_directory();
+	char offset = e->enemy_texture_offset[id];
+	TileSetData data = get_tile_set_data(e->level);
+	const char* asset_file_name = get_asset_file_name(ENEMY, offset, data);
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 
