@@ -148,6 +148,8 @@ ESTADO inicializar(int level) {
 			case OBSTACLE:
 				e.obstacle_texture_offset[x][y] = generate_random_obstacle_offset(tileset);
 				break;
+			default:
+				break;
 			}
 			e.tile_texture_offset[x][y] = generate_random_tile_offset(tileset);
 		}
