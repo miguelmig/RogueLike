@@ -14,11 +14,19 @@ svg
 
 #restart
 {
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-top: 10px;
     border-radius: 3px;
     margin-left: 50%;
     transform: translateX(-50%);
+    cursor: pointer;
+    border: none;
+    background-color: #f44336;
+    padding: 14px 28px; 
 }
+
+#restart:hover {background: #da190b;}
 
 body
 {
