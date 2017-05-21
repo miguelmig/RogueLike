@@ -68,7 +68,6 @@ function restart()
     window.location = "?restart";
 }
 
-
 function load()
 {
     var restartButton = document.getElementById('restart');
@@ -76,4 +75,40 @@ function load()
     {
         restartButton.onclick = restart;
     }
+
+    hBar = $('.health-bar');
+    var bar = hBar.find('.bar');
+    var total = hBar.data('total'),
+        value = hBar.data('value');
+    var barWidth = (value / total) * 100;
+    bar.css('width', barWidth + "%");
+    console.log("printing bar size %d%%", barWidth);
+}
+
+function on_damage(damage)
+{
+    hBar = $('.health-bar'),
+    bar = hBar.find('.bar'),
+    hit = hBar.find('.hit');
+
+    var total = hBar.data('total'),
+        value = hBar.data('value');
+    
+    if (value < 0) {
+        return;
+    }
+
+    var newValue = value;
+    // calculate the percentage of the total width
+    var barWidth = (newValue / total) * 100;
+    var hitWidth = (damage / value) * 100 + "%";
+    
+    // show hit bar and set the width
+    hit.css('width', hitWidth);
+    setTimeout(function(){
+      hit.css({'width': '0'});
+      bar.css('width', barWidth + "%");
+    }, 500);
+    console.log("ondmg: printing bar size %d%%", barWidth);
+    //bar.css('width', total - value);
 }

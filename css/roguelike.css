@@ -9,8 +9,10 @@ svg
 {
     margin-top: 55px;
     position:fixed;
-    top: 50%;
+    top: 65%;
     left: 50%;
+    transform: translateX(-50%);
+    border-radius: 3px;
 }
 
 body
@@ -30,6 +32,7 @@ body
 #highscores
 {
 	border: 3px solid indianred;
+    padding: 5px;
 }
 
 #highscores .text
@@ -41,4 +44,40 @@ body
 #highscore_title
 {
 	font-weight: bold;
+}
+
+.health-bar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 25%;
+    height: 20px;
+    padding: 5px;
+    background: #ddd;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width .5s linear;
+}
+
+.bar {
+    background: #c54;
+    width: 0px;
+    height: 10px;
+    position: relative;
+}
+
+.hit {
+    background: rgba(255,255,255,0.6);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 0px;
+    
+    transition: width .5s linear;
 }

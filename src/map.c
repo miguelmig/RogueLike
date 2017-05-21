@@ -164,7 +164,7 @@ static const TileSetData tileSets[TILESET_NUM] =
 
 };
 
-const char* getImagesAssetDirectory()
+const char* get_images_asset_directory()
 {
 	return imageDirectory;
 }
@@ -187,21 +187,21 @@ const char* getAssetFileName(CellTypes cell, unsigned char tileOffset, TileSetDa
 	}
 }
 
-char generateRandomTileOffset(TileSets tileset)
+char generate_random_tile_offset(TileSets tileset)
 {
 	TileSetData data = tileSets[tileset];
 
 	return random_number(0, data.number_of_floor_tiles - 1);
 }
 
-char generateRandomObstacleOffset(TileSets tileset)
+char generate_random_obstacle_offset(TileSets tileset)
 {
 	TileSetData data = tileSets[tileset];
 
 	return random_number(0, data.number_of_obstacle_tiles - 1);
 }
 
-CellTypes getCellTypeAtPosition(ESTADO* e, int x, int y)
+CellTypes get_cell_type_at_pos(ESTADO* e, int x, int y)
 {
 	if (e == NULL)
 	{
@@ -238,7 +238,7 @@ TileSetData get_tile_set_data(int level)
 
 void draw_tile(ESTADO* e, int x, int y)
 {
-	const char* base_directory = getImagesAssetDirectory();
+	const char* base_directory = get_images_asset_directory();
 	char offset = e->tileTextureOffset[x][y];
 	TileSetData data = get_tile_set_data(e->level);
 	const char* asset_file_name = getAssetFileName(EMPTY, offset, data);
@@ -250,7 +250,7 @@ void draw_tile(ESTADO* e, int x, int y)
 
 void draw_obstacle(ESTADO* e, int x, int y)
 {
-	const char* base_directory = getImagesAssetDirectory();
+	const char* base_directory = get_images_asset_directory();
 	char offset = e->obstacleTextureOffset[x][y];
 	TileSetData data = get_tile_set_data(e->level);
 	const char* asset_file_name = getAssetFileName(OBSTACLE, offset, data);
@@ -260,23 +260,22 @@ void draw_obstacle(ESTADO* e, int x, int y)
 	free((void*)asset_file_name);
 }
 
-void createArrowLink(Orientations orientation, int x, int y, const char* link)
+void create_arrow_link(Orientations orientation, int x, int y, const char* link)
 {
 	const char* orientation_id = orientationMoveIds[orientation];
 	printf("<a id=%s xlink:href=%s>\n", orientation_id, link);
-	drawArrow(orientation, x, y);
+	draw_arrow_image(orientation, x, y);
 	printf("</a>\n");
 }
 
-void drawArrow(Orientations orientation, int x, int y)
+void draw_arrow_image(Orientations orientation, int x, int y)
 {
-	const char* base_directory = getImagesAssetDirectory();
+	const char* base_directory = get_images_asset_directory();
 	const char* asset_file_name = orientationMoveFileNames[orientation];
 
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 }
-
 
 void create_attack_link(Orientations orientation, int x, int y, const char* link)
 {
@@ -288,14 +287,14 @@ void create_attack_link(Orientations orientation, int x, int y, const char* link
 
 void draw_attack_image(Orientations orientation, int x, int y)
 {
-	const char* base_directory = getImagesAssetDirectory();
+	const char* base_directory = get_images_asset_directory();
 	const char* asset_file_name = orientationAttackFileNames[orientation];
 
 	printf("<image x=%d y=%d width=%d height=%d xlink:href=%s%s />\n", \
 		ESCALA * x, ESCALA* y, ESCALA, ESCALA, base_directory, asset_file_name);
 }
 
-void onKillEnemy(ESTADO* e, int index)
+void update_enemy_array(ESTADO* e, int index)
 {
 	int max = e->num_inimigos;
 	int i;

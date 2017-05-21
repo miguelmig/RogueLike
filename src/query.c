@@ -30,7 +30,7 @@ int parse_move_action(const char* move_query_string, ESTADO* e)
 		return 0;
 	}
 
-	if (getCellTypeAtPosition(e, e->jog.pos.x + dx, e->jog.pos.y + dy) != EMPTY)
+	if (get_cell_type_at_pos(e, e->jog.pos.x + dx, e->jog.pos.y + dy) != EMPTY)
 	{
 		return 0;
 	}
@@ -86,7 +86,7 @@ int parse_attack_action(const char* attack_query_string, ESTADO* e)
 
 		if (monster_x == command_x && command_y == monster_y)
 		{
-			onKillEnemy(e, i);
+			update_enemy_array(e, i);
 			return 1;
 		}
 	}

@@ -41,18 +41,18 @@ typedef struct
 } TileSetData;
 
 
-CellTypes getCellTypeAtPosition(ESTADO* e, int x, int y);
-char generateRandomTileOffset(TileSets tileset);
-char generateRandomObstacleOffset(TileSets tileset);
+CellTypes get_cell_type_at_pos(ESTADO* e, int x, int y);
+char generate_random_tile_offset(TileSets tileset);
+char generate_random_obstacle_offset(TileSets tileset);
 void draw_tile(ESTADO* e, int x, int y);
 void draw_obstacle(ESTADO* e, int x, int y);
-void createArrowLink(Orientations orientation, int x, int y, const char* link);
-void drawArrow(Orientations orientation, int x, int y);
+void create_arrow_link(Orientations orientation, int x, int y, const char* link);
+void draw_arrow_image(Orientations orientation, int x, int y);
 void create_attack_link(Orientations orientation, int x, int y, const char* link);
 void draw_attack_image(Orientations orientation, int x, int y);
-void onKillEnemy(ESTADO* e, int index);
+void update_enemy_array(ESTADO* e, int index);
 
-const char* getImagesAssetDirectory();
+const char* get_images_asset_directory();
 
 TileSets get_tileset_by_level(int level);
 

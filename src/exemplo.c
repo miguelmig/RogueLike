@@ -114,14 +114,14 @@ ESTADO inicializar(int level) {
 	{
 		for (x = 0; x < TAM; x++)
 		{
-			CellTypes cell_type = getCellTypeAtPosition(&e, x, y);
+			CellTypes cell_type = get_cell_type_at_pos(&e, x, y);
 			TileSets tileset = get_tileset_by_level(level);
 			switch (cell_type)
 			{
 			case OBSTACLE:
-				e.obstacleTextureOffset[x][y] = generateRandomObstacleOffset(tileset);
+				e.obstacleTextureOffset[x][y] = generate_random_obstacle_offset(tileset);
 			default:
-				e.tileTextureOffset[x][y] = generateRandomTileOffset(tileset);
+				e.tileTextureOffset[x][y] = generate_random_tile_offset(tileset);
 				break;
 			}
 		}
@@ -130,26 +130,33 @@ ESTADO inicializar(int level) {
 	return e;
 }
 
+void imprimir_health_bar(int current_health, int max_health)
+{
+	printf("<div class=\"health-bar\" data-total=\"%d\" data-value=\"%d\">\n",
+		max_health, current_health);
+	printf("<div class=\"bar\">\n");
+	printf("<div class =\"hit\"></div>");
+	printf("</div></div>\n");
+}
+
+void imprimir_dano(int damage)
+{
+	printf("<script>on_damage(%d);</script>\n", damage);
+}
+
+
 void imprime_movimento(Orientations orientation, ESTADO e, int dx, int dy) {
 	int x = e.jog.pos.x + dx;
 	int y = e.jog.pos.y + dy;
-	char link[MAX_BUFFER];
-	if(!posicao_valida(x, y))
-		return;
 
-	if (!posicao_livre(x, y, &e))
+	static char link[MAX_BUFFER];
+	if (!posicao_valida(x, y) || !posicao_livre(x, y, &e))
 	{
 		return;
 	}
+
 	create_move_query(dx, dy, link);
-	//sprintf(link, "?%s", estado2str(novo));
-	createArrowLink(orientation, x, y, link);
-	/*
-	ABRIR_LINK(link);
-	drawArrow(orientation, x, y);
-	//imprime_casa(x, y);
-	FECHAR_LINK;
-	*/
+	create_arrow_link(orientation, x, y, link);
 }
 
 void imprime_movimentos(ESTADO e) {
@@ -168,15 +175,14 @@ void imprime_ataque(Orientations orientation, ESTADO e, int dx, int dy)
 {
 	int x = e.jog.pos.x + dx;
 	int y = e.jog.pos.y + dy;
-	char link[MAX_BUFFER];
+	static char link[MAX_BUFFER];
 
-	if (!posicao_valida(x, y) || posicao_livre(x, y, &e) || getCellTypeAtPosition(&e, x, y) != ENEMY)
+	if (!posicao_valida(x, y) || posicao_livre(x, y, &e) || get_cell_type_at_pos(&e, x, y) != ENEMY)
 	{
 		return;
 	}
 
 	create_attack_query(dx, dy, link);
-	//sprintf(link, "?%s", estado2str(novo));
 	create_attack_link(orientation, x, y, link);
 }
 void imprime_ataques(ESTADO e)
@@ -251,6 +257,10 @@ ESTADO obter_estado()
 		e = inicializar(1);
 		output_state_to_file(&e, STATE_FILE_NAME);
 	}
+	else
+	{
+		srand(e.gameSeed);
+	}
 
 	return e;
 }
@@ -319,8 +329,20 @@ void guardar_highscores(int* highscore_array)
 	fclose(f);
 }
 
+void atacar_jogador(INIMIGO* enemy, ESTADO* e, int* damage_done)
+{
+	if (enemy == NULL || e == NULL)  
+	{
+		*damage_done = 0;
+		return;
+	}
 
-void mover_inimigos(ESTADO* e)
+	int jogador_health = e->jog.current_health;
+	*damage_done = 10;
+	e->jog.current_health -= 10;
+}
+
+void mover_inimigos(ESTADO* e, int* damage_done)
 {
 	int i, j;
 	for (i = 0; i < e->num_inimigos; i++)
@@ -404,6 +426,15 @@ void mover_inimigos(ESTADO* e)
 		int new_x = x + dx;
 		int new_y = y + dy;
 
+		int enemy_x = e->inimigo[i].pos.x;
+		int enemy_y = e->inimigo[i].pos.y;
+
+		if (dx == 0 && dy == 0 && abs(e->jog.pos.x - enemy_x) + abs(e->jog.pos.y - enemy_y) <= 1)
+		{
+			// Can attack
+			atacar_jogador(&e->inimigo[i], e, damage_done);
+		}
+
 		e->inimigo[i].pos.x = new_x;
 		e->inimigo[i].pos.y = new_y;
 	}
@@ -456,9 +487,10 @@ int main() {
 	COMECAR_HTML;
 	int change_turn = 0;
 	int state_changed = parse_query(getenv("QUERY_STRING"), &e, &change_turn);
+	int damage_done = 0;
 	if (change_turn)
 	{
-		mover_inimigos(&e);
+		mover_inimigos(&e, &damage_done);
 	}
 
 	if (state_changed)
@@ -485,24 +517,36 @@ int main() {
 				break;
 			}
 		}
+
+		// Clear the board
+		e = inicializar(1);
+		output_state_to_file(&e, STATE_FILE_NAME);
 	}
 
 	guardar_highscores(highscores);
 
 	printf("<body onLoad=\"load();\">\n");
 	imprimir_score_board(e.score, highscores);
-	ABRIR_SVG(TAM * ESCALA , TAM * ESCALA);
+	ABRIR_SVG(TAM * ESCALA + 120, TAM * ESCALA + 120);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
 			imprime_casa(&e, x, y);
 
 	imprime_inimigos(e);
-	imprime_jogador(e);
-	imprime_obstaculos(e);
-	imprime_saida(e);
-	FECHAR_SVG;
+	imprime_jogador(e); 
+	imprime_obstaculos(e);   
+	imprime_saida(e);     
+	char linha[1024] = { 0 };
 
-	imprimir_butao_restart();
+	sprintf(linha, "Nível %d", e.level);
+	TEXTO(10, 1, ESCALA, linha);
+	FECHAR_SVG; 
+	imprimir_health_bar(e.jog.current_health, e.jog.max_health);
+	imprimir_butao_restart(); 
+	if (damage_done)
+	{
+		imprimir_dano(damage_done);
+	}
 	printf("</body>");
 	
 	return 0;

@@ -47,6 +47,16 @@ Macros úteis para gerar CGIs
 												ESCALA * X, ESCALA* Y, ESCALA, ESCALA, IMAGE_PATH FICHEIRO)
 
 /**
+\brief Macro para criar uma linha de texto
+@param X A coordenada X do canto superior esquerdo
+@param Y A coordenada Y do canto superior esquerdo
+@param ESCALA A escala da imagem
+@param TXT O texto a ser escrito
+*/
+#define TEXTO(X, Y, ESCALA, TXT)						printf("<text x=%d y=%d>\n%s\n</text>\n", \
+															ESCALA * X, ESCALA * Y, TXT)
+
+/**
 \brief Macro para criar um quadrado
 @param X A coordenada X do canto superior esquerdo
 @param Y A coordenada Y do canto superior esquerdo
