@@ -261,8 +261,6 @@ void update_enemy_array(ESTADO* e, int index)
 		e->inimigo[i] = e->inimigo[i + 1];
 	}
 	e->num_inimigos--;
-
-	e->score += KILL_SCORE_BONUS;
 }
 
 TileSets get_tileset_by_level(int level)

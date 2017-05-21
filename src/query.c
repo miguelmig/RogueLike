@@ -60,6 +60,7 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 	*e = novo;
 	e->jog.pos.x = dx;
 	e->jog.pos.y = dy;
+	e->score += NEW_LEVEL_SCORE_BONUS;
 	return 1;
 }
 
@@ -88,6 +89,7 @@ int parse_attack_action(const char* attack_query_string, ESTADO* e)
 		if (monster_x == command_x && command_y == monster_y)
 		{
 			update_enemy_array(e, i);
+			e->score += KILL_SCORE_BONUS;
 			return 1;
 		}
 	}
