@@ -62,7 +62,7 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 	e->jog.pos.x = dx;
 	e->jog.pos.y = dy;
 	e->score += NEW_LEVEL_SCORE_BONUS;
-	e->jog.current_health = cur_hp + PLAYER_MAX_HEALTH / 2;
+	e->jog.current_health = MIN(PLAYER_MAX_HEALTH, cur_hp + PLAYER_MAX_HEALTH / 2);
 	return 1;
 }
 
