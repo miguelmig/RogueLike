@@ -55,7 +55,7 @@ int posicao_livre(int x, int y, ESTADO* e)
 }
 
 ESTADO inicializar(int level) {
-	ESTADO e = {{0}};
+	ESTADO e = { 0 };
 	e.gameSeed = (unsigned int)time(0);
 	srand(e.gameSeed);
 
@@ -234,7 +234,7 @@ void imprime_obstaculos(ESTADO e) {
 
 ESTADO obter_estado()
 {
-	ESTADO e = {{0}}; 
+	ESTADO e = {0};
 	int file_exists = read_state_from_file(STATE_FILE_NAME, &e);
 	if (!file_exists)
 	{
