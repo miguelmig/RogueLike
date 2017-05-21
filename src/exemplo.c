@@ -478,14 +478,14 @@ int main() {
 	INCLUIR_SCRIPT("roguelike.js");
 	INCLUIR_CSS("roguelike.css");
 
-	/* Pontuações */
-
-	int highscores[HIGHSCORE_SAVE_COUNT] = { 0 };
-	ler_highscores(highscores);
 	if (is_game_over(&e))
 	{
 		on_game_over(&e);
 	}
+
+	/* Pontuações */
+	int highscores[HIGHSCORE_SAVE_COUNT] = { 0 };
+	ler_highscores(highscores);
 
 
 	printf("<body onLoad=\"load();\">\n");
