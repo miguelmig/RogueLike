@@ -57,10 +57,12 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 	ESTADO novo = inicializar(++e->level);
 	novo.level = e->level;
 	novo.score = e->score;
+	int cur_hp = e->jog.current_health;
 	*e = novo;
 	e->jog.pos.x = dx;
 	e->jog.pos.y = dy;
 	e->score += NEW_LEVEL_SCORE_BONUS;
+	e->jog.current_health = cur_hp + PLAYER_MAX_HEALTH / 2;
 	return 1;
 }
 
