@@ -5,6 +5,7 @@
 #include "map.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h> // abs
 
 #define MAX_BUFFER		10240
 #define CMP(str)		else if(strcmp(buffer, str) == 0)
