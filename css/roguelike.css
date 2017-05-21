@@ -1,5 +1,12 @@
 svg
 {
+    margin-top: 20px;
+}
+
+#level
+{
+    margin-top: -10px;
+    font-weight: bold;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
@@ -7,12 +14,10 @@ svg
 
 #restart
 {
-    margin-top: 55px;
-    position:fixed;
-    top: 65%;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: 10px;
     border-radius: 3px;
+    margin-left: 50%;
+    transform: translateX(-50%);
 }
 
 body
@@ -50,17 +55,15 @@ body
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 25%;
+    width: 400px;
     height: 20px;
     padding: 5px;
     background: #ddd;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    position: absolute;
     top: 60%;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: 10px;
     transition: width .5s linear;
 }
 
@@ -80,4 +83,14 @@ body
     width: 0px;
     
     transition: width .5s linear;
+}
+
+.center
+{
+    margin:auto;
+    position:fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+    align-items: center;
 }

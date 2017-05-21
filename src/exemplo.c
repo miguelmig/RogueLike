@@ -490,7 +490,9 @@ int main() {
 
 	printf("<body onLoad=\"load();\">\n");
 	imprimir_score_board(e.score, highscores);
-	ABRIR_SVG(TAM * ESCALA + 120, TAM * ESCALA + 120);
+	printf("<div class=center>");
+	printf("<span id=level> Nível %d</span>", e.level); 
+	ABRIR_SVG(TAM * ESCALA, TAM * ESCALA);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
 			imprime_casa(&e, x, y);
@@ -498,16 +500,16 @@ int main() {
 	imprime_inimigos(e);
 	imprime_jogador(e); 
 	imprime_obstaculos(e);   
-	imprime_saida(e);     
-
+	imprime_saida(e);
+	 
 	char level_string[1024] = { 0 };
 
-	sprintf(level_string, "Nível %d", e.level);
-	TEXTO(10, 1, ESCALA, level_string);
+	//sprintf(level_string, "Nível %d", e.level);
+	//TEXTO(10, 1, ESCALA, level_string);
 	FECHAR_SVG;
-
 	imprimir_health_bar(e.jog.current_health, e.jog.max_health);
-	imprimir_butao_restart(); 
+	imprimir_butao_restart();
+	printf("</div>"); 
 	if (damage_done)
 	{
 		imprimir_dano(damage_done);
