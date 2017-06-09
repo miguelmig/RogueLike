@@ -397,6 +397,10 @@ void atacar_jogador(INIMIGO* enemy, ESTADO* e, int* damage_done)
 void mover_inimigos(ESTADO* e, int* damage_done)
 {
 	int i, j;
+
+	int player_x = e->jog.pos.x;
+	int player_y = e->jog.pos.y;
+
 	for (i = 0; i < e->num_inimigos; i++)
 	{
 		int directions[5][2] = {
@@ -410,6 +414,11 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 		int x = e->inimigo[i].pos.x;
 		int y = e->inimigo[i].pos.y;
 		int available_directions = 5;
+
+		float minDistance = TAM * TAM;
+		int bestDirection = 0;
+		int found_available_move = 0;
+
 		for (j = 0; j < available_directions; j++)
 		{
 			int dx = directions[j][0];
@@ -418,8 +427,21 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 			int new_x = x + dx;
 			int new_y = y + dy;
 
-			if (posicao_valida(new_x, new_y) == 0 || (posicao_livre(new_x, new_y, e) == 0 && !(new_y == y && new_x == x)))
+			if ((posicao_valida(new_x, new_y) != 0 && posicao_livre(new_x, new_y, e) != 0) || (new_y == y && new_x == x))
 			{
+				found_available_move = 1;
+
+				int new_dx = player_x - new_x;
+				int new_dy = player_y - new_y;
+
+				float distance = sqrtf((float)new_dx * new_dx + new_dy * new_dy);
+				if (minDistance > distance)
+				{
+					minDistance = distance;
+					bestDirection = j;
+				}
+
+				/*
 				for (int k = j; k < available_directions - 1; k++)
 				{
 					memcpy(directions[k], directions[k + 1], sizeof(int) * 2);
@@ -427,45 +449,23 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 
 				--available_directions;
 				j--;
+				*/
 			}
 		}
 
-		// available_directions deve conter o numero de direcões validas para o inimigo se movimentar
-		if (available_directions == 0)
-			continue;
-
-		float minDistance = TAM * TAM;
-		int bestDirection = 0;
-		for (j = 0; j < available_directions; j++)
+		if (!found_available_move)
 		{
-			int dx = directions[j][0];
-			int dy = directions[j][1];
-			int new_x = x + dx;
-			int new_y = y + dy;
-			int player_x = e->jog.pos.x;
-			int player_y = e->jog.pos.y;
-
-			dx = player_x - new_x;
-			dy = player_y - new_y;
-			float distance = sqrtf((float)dx * dx + dy * dy);
-
-			if (minDistance > distance)
-			{
-				minDistance = distance;
-				bestDirection = j;
-			}
+			continue;
 		}
 
-		int dx = directions[bestDirection][0];
-		int dy = directions[bestDirection][1];
 
-		int new_x = x + dx;
-		int new_y = y + dy;
+		int optimal_dx = directions[bestDirection][0];
+		int optimal_dy = directions[bestDirection][1];
 
-		int enemy_x = e->inimigo[i].pos.x;
-		int enemy_y = e->inimigo[i].pos.y;
+		int new_x = x + optimal_dx;
+		int new_y = y + optimal_dy;
 
-		if (dx == 0 && dy == 0 && abs(e->jog.pos.x - enemy_x) + abs(e->jog.pos.y - enemy_y) <= 1)
+		if (optimal_dx == 0 && optimal_dy == 0 && abs(player_x - x) + abs(player_y - y) <= 1)
 		{
 			// Can attack
 			atacar_jogador(&e->inimigo[i], e, damage_done);
