@@ -6,7 +6,7 @@
 char *estado2str(ESTADO e) {
 	static char buffer[MAX_BUFFER];
 	unsigned char *p = (unsigned char *)&e;
-	int i,j;
+	unsigned int i,j;
 
 	for (i = 0, j = 0; i < sizeof(ESTADO); i++, j += 2)
 	{
@@ -21,7 +21,7 @@ char *estado2str(ESTADO e) {
 ESTADO str2estado(char *argumentos) {
 	ESTADO e;
 	unsigned char *p = (unsigned char *) &e;
-	int i;
+	unsigned int i;
 
 	for(i = 0; i < sizeof(ESTADO); i++, argumentos += 2) {
 		unsigned int d;
