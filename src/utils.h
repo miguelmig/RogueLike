@@ -21,10 +21,10 @@ int random_number(int min, int max);
 \brief Cria um cookie no browser do jogador
 
 */
-void write_to_cookie(char *name,
-	char *value,
-	char *expires,
-	char *path,
-	char *domain,
+void write_to_cookie(const char *name,
+	const char *value,
+	const char *expires,
+	const char *path,
+	const char *domain,
 	int secure);
 
