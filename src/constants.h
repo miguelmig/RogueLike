@@ -35,7 +35,7 @@
 #define HIGHSCORE_SAVE_COUNT 3
 
 /** \brief Nome do ficheiro onde vão ser guardados os highscores */
-#define HIGHSCORES_FILE_NAME "highscores.txt"
+#define HIGHSCORES_FILE_NAME "~/highscores.txt"
 
 /** \brief Nome do ficheiro de imagem correspondente ao jogador */
 #define PLAYER_IMAGE_FILE_NAME "DwellerN_03.png"
@@ -46,5 +46,11 @@
 /** \brief Nome do ficheiro de imagem correspondente à saida */
 #define POTION_IMAGE_FILE_NAME "health_potion.png"
 
-/** \brief Quantidade de vida que uma poção regenera*/
+/** \brief Quantidade de vida que uma poção regenera */
 #define POTION_HEALTH_AMOUNT 50
+
+/** \brief Nome do cookie para guardar o estado */
+#define COOKIE_NAME "gamestate"
+
+/** \brief Tamanho máximo do header de cookie */
+#define COOKIE_MAX_LENGTH 4096
