@@ -41,3 +41,26 @@ int random_number(int min, int max)
 		return -1;
 	}
 }
+
+// https://stackoverflow.com/questions/29414709/when-reading-cookie-in-cgi-program-only-the-first-line-is-retrieved
+void write_to_cookie(char *name,
+	char *value,
+	char *expires,
+	char *path,
+	char *domain,
+	int secure) {
+	printf("Set-Cookie: %s=%s;", name, value);
+	if (expires) {
+		printf(" EXPIRES=%s;", expires);
+	}
+	if (path) {
+		printf(" PATH=%s;", path);
+	}
+	if (domain) {
+		printf(" DOMAIN=%s;", domain);
+	}
+	if (secure) {
+		printf(" SECURE");
+	}
+	printf("\n");
+}

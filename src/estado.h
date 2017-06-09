@@ -70,7 +70,7 @@ typedef struct estado {
 	char enemy_texture_offset[MAX_INIMIGOS];
 	/* Nivel de progresso atual do jogo */
 	int level;
-	/* Pontuação do jogo atual*/
+	/* Pontuação do jogo atual */
 	int score;
 	/* Número de Inimigos Mortos */
 	int inimigos_mortos;

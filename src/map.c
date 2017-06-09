@@ -8,6 +8,7 @@
 
 
 static const char image_directory[] = "/images/";
+
 #ifdef _WIN32
 #define strdup _strdup
 #endif

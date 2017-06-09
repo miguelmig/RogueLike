@@ -1,3 +1,8 @@
+/**
+@file map.h
+Ficheiro usado para gerar/desenhar/imprimir todo o tipo de acções e imagens relacionadas com a grelha
+*/
+
 #pragma once
 #include "estado.h"
 

@@ -6,13 +6,18 @@
 #define MIN_OBSTACLES 10
 #define MAX_OBSTACLES 20
 
+/** \brief Tamanho da grelha quadrada ( TAM x TAM ) */
 #define TAM 10
 
 #define MIN_POCOES 0
 
 #define ESCALA 40
 
+#ifdef _WIN32
 #define STATE_FILE_NAME "gamestate.txt"
+#else
+#define STATE_FILE_NAME "~/gamestate.txt"	
+#endif
 
 #define PLAYER_START_X 5
 #define PLAYER_START_Y 9
@@ -34,9 +39,6 @@
 
 /** \brief Nome do ficheiro de imagem correspondente ao jogador */
 #define PLAYER_IMAGE_FILE_NAME "DwellerN_03.png"
-
-/** \brief Nome do ficheiro de imagem correspondente aos inimigos */
-#define ENEMY_IMAGE_FILE_NAME "Driders_04.png"
 
 /** \brief Nome do ficheiro de imagem correspondente à saida */
 #define EXIT_IMAGE_FILE_NAME "trapdoor1.png"

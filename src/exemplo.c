@@ -289,7 +289,11 @@ void imprime_pocoes(ESTADO* e)
 	}
 }
 
+#ifdef USE_COOKIES
 ESTADO obter_estado()
+#else
+ESTADO obter_estado()
+#endif
 {
 	ESTADO e = {0};
 	int file_exists = read_state_from_file(STATE_FILE_NAME, &e);
