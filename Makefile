@@ -1,4 +1,4 @@
-CFLAGS=-Wall
+CFLAGS=-Wall -Wextra -pedantic -O2
 FICHEIROS=cgi.h estado.c estado.h map.c map.h exemplo.c Makefile
 
 SOURCEDIR = src/
