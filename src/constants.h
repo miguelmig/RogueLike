@@ -16,7 +16,7 @@
 #ifdef _WIN32
 #define STATE_FILE_NAME "gamestate.txt"
 #else
-#define STATE_FILE_NAME "~/gamestate.txt"	
+#define STATE_FILE_NAME "/tmp/gamestate.txt"	
 #endif
 
 #define PLAYER_START_X 5
@@ -35,7 +35,7 @@
 #define HIGHSCORE_SAVE_COUNT 3
 
 /** \brief Nome do ficheiro onde vão ser guardados os highscores */
-#define HIGHSCORES_FILE_NAME "~/highscores.txt"
+#define HIGHSCORES_FILE_NAME "/tmp/highscores.txt"
 
 /** \brief Nome do ficheiro de imagem correspondente ao jogador */
 #define PLAYER_IMAGE_FILE_NAME "DwellerN_03.png"
