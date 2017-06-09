@@ -354,7 +354,7 @@ int ler_highscores(int* highscore_array)
 	}
 
 	static char buffer[MAX_BUFFER];
-	fread(buffer, sizeof(char), MAX_BUFFER, f);
+	int num_bytes_read = fread(buffer, sizeof(char), MAX_BUFFER, f);
 	fclose(f);
 
 	sscanf(buffer, "%d %d %d", &highscore_array[0], &highscore_array[1], &highscore_array[2]);

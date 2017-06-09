@@ -46,7 +46,7 @@ int read_state_from_file(const char* file_name, ESTADO* destination)
 	}
 
 	static char buffer[MAX_BUFFER];
-	fread(buffer, sizeof(char), MAX_BUFFER, f);
+	int num_bytes_read = fread(buffer, sizeof(char), MAX_BUFFER, f);
 	fclose(f);
 	ESTADO e = str2estado(buffer);
 	*destination = e;
