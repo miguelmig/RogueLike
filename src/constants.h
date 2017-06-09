@@ -35,7 +35,11 @@
 #define HIGHSCORE_SAVE_COUNT 3
 
 /** \brief Nome do ficheiro onde vão ser guardados os highscores */
+#ifdef _WIN32
+#define HIGHSCORES_FILE_NAME "highscores.txt"
+#else
 #define HIGHSCORES_FILE_NAME "/tmp/highscores.txt"
+#endif
 
 /** \brief Nome do ficheiro de imagem correspondente ao jogador */
 #define PLAYER_IMAGE_FILE_NAME "DwellerN_03.png"
