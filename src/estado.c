@@ -50,7 +50,7 @@ int read_state_from_file(const char* file_name, ESTADO* destination)
 	fclose(f);
 	ESTADO e = str2estado(buffer);
 	*destination = e;
-	return 1;
+	return num_bytes_read;
 }
 
 int output_state_to_file(const ESTADO* e, const char* file_name)

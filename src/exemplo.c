@@ -358,7 +358,7 @@ int ler_highscores(int* highscore_array)
 	fclose(f);
 
 	sscanf(buffer, "%d %d %d", &highscore_array[0], &highscore_array[1], &highscore_array[2]);
-	return 1;
+	return num_bytes_read;
 }
 
 void guardar_highscores(int* highscore_array)

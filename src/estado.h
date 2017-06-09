@@ -97,7 +97,7 @@ ESTADO str2estado(char *argumentos);
 \brief Função que carrega o estado guardado num ficheiro
 @param file_name Nome do ficheiro aonde o estado está guardado
 @param destination Apontador para o endereço onde vai ser guardado o estado
-@returns 0 se o ficheiro nao existir, 1 caso tudo tenha corrido bem
+@returns 0 se o ficheiro nao existir, ou caso exista, o número de bytes lidos
 */
 int read_state_from_file(const char* file_name, ESTADO* destination);
 
