@@ -17,7 +17,8 @@
 #define MAX_POCOES 5
 
 /**
-\brief Estrutura que armazena uma posição
+  *	@struct POSICAO
+  *	@brief Estrutura que armazena uma posição
 */
 typedef struct posicao {
 	char x;
@@ -25,7 +26,8 @@ typedef struct posicao {
 } POSICAO;
 
 /**
-\brief Estrutura que armazena informação sobre o jogador
+  * @struct JOGADOR
+  * @brief Estrutura que armazena informação sobre o jogador
 */
 typedef struct jogador
 {
@@ -37,7 +39,8 @@ typedef struct jogador
 
 
 /**
-\brief Estrutura que armazena informação sobre cada inimigo
+  * \struct INIMIGO
+  * \brief Estrutura que armazena informação sobre cada inimigo
 */
 
 typedef struct inimigo
@@ -49,6 +52,7 @@ typedef struct inimigo
 } INIMIGO;
 
 /**
+\struct ESTADO
 \brief Estrutura que armazena o estado do jogo
 */
 
