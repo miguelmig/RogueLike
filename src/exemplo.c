@@ -3,6 +3,9 @@
 #include <math.h> // for abs
 #include <time.h> // for time
 
+
+//#define USE_COOKIES
+
 #include "cgi.h"
 #include "estado.h"
 #include "map.h"
@@ -290,10 +293,31 @@ void imprime_pocoes(ESTADO* e)
 }
 
 #ifdef USE_COOKIES
-ESTADO obter_estado()
+ESTADO obter_estado(const char* cookies_string)
+{
+	ESTADO e = { 0 };
+	if (cookies_string == NULL || strlen(cookies_string) == 0)
+	{
+		e = inicializar(1);
+		output_state_to_cookie(&e);
+		return e;
+	}
+	else
+	{
+		int cookie_exists = read_state_from_request_header(cookies_string, &e);
+		if (!cookie_exists)
+		{
+			e = inicializar(1);
+			output_state_to_cookie(&e);
+			return e;
+		}
+	}
+
+	srand(e.gameSeed);
+	return e;
+}
 #else
 ESTADO obter_estado()
-#endif
 {
 	ESTADO e = {0};
 	int file_exists = read_state_from_file(STATE_FILE_NAME, &e);
@@ -309,6 +333,7 @@ ESTADO obter_estado()
 
 	return e;
 }
+#endif
 
 void imprimir_butao_restart()
 {
@@ -533,9 +558,17 @@ void on_game_over(ESTADO* e)
 int main() {
 	int x, y;
 
+#ifdef USE_COOKIES
+	const char *method_str = getenv("HTTP_COOKIE");
+	ESTADO e = obter_estado(method_str);
+#else
 	ESTADO e = obter_estado();
+#endif
 	
 	COMECAR_HTML;
+#ifdef USE_COOKIES
+	print_debug("Request Header: \n %s ", method_str);
+#endif
 	int change_turn = 0;
 	int state_changed = parse_query(getenv("QUERY_STRING"), &e, &change_turn);
 	int damage_done = 0;

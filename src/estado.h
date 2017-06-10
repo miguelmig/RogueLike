@@ -1,6 +1,6 @@
 /**
-@file estado.h
-Definição do estado e das funções que convertem estados em strings e vice-versa
+  *	@file estado.h
+  * @brief Definição do estado e das funções que convertem estados em strings e vice-versa
 */
 
 #pragma once
@@ -24,12 +24,21 @@ typedef struct posicao {
 	char y;
 } POSICAO;
 
+/**
+\brief Estrutura que armazena informação sobre o jogador
+*/
 typedef struct jogador
 {
 	POSICAO pos;
 	int current_health;
 	int max_health;
 } JOGADOR;
+
+
+
+/**
+\brief Estrutura que armazena informação sobre cada inimigo
+*/
 
 typedef struct inimigo
 {
@@ -108,3 +117,19 @@ int read_state_from_file(const char* file_name, ESTADO* destination);
 @returns 0 se tiver ocurrido algum erro, 1 caso tudo tenha corrido bem
 */
 int output_state_to_file(const ESTADO* e, const char* file_name);
+
+
+/**
+\brief Função que carrega o estado guardado num cookie
+@param request_header_string String contendo o cookie 
+@param destination Apontador para o endereço onde vai ser guardado o estado
+@returns 0 se o cookie nao existir, 1 caso tudo tenha corrido bem
+*/
+int read_state_from_request_header(const char* request_header_string, ESTADO* destination);
+
+/**
+\brief Função que guarda o estado do jogo num cookie
+@param e Estado a ser guardado
+@returns 0 se tiver ocurrido algum erro, 1 caso tudo tenha corrido bem
+*/
+int output_state_to_cookie(const ESTADO* e);

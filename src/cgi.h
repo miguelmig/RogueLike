@@ -31,6 +31,7 @@ Macros úteis para gerar CGIs
 @param tamy A altura do svg
 */
 #define ABRIR_SVG(tamx, tamy)				printf("<svg width=%d height=%d>\n", tamx, tamy)
+
 /**
 \brief Macro para fechar um svg
 */
@@ -99,6 +100,6 @@ Macros úteis para gerar CGIs
 
 /**
 \brief Macro para incluir ficheiros css
-@param script Nome do ficheiro dentro da pasta STYLE_PATH
+@param sheet Nome do ficheiro dentro da pasta STYLE_PATH
 */
 #define INCLUIR_CSS(sheet)			printf("<link rel = \"stylesheet\" type = \"text/css\" href = \"%s\">", STYLE_PATH sheet)
