@@ -125,5 +125,5 @@ int output_state_to_cookie(const ESTADO* e)
 
 	write_to_cookie(COOKIE_NAME "2", second_buffer, "Sun, 15 Jul 2018 00:00:01 GMT", NULL, NULL, 0);
 
-	return 1;
+	return size_of_data;
 }
