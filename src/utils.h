@@ -1,6 +1,6 @@
 /**
 @file utils.h
-Funções de uso geral 
+@brief Funções de uso geral 
 */
 
 #pragma once
