@@ -1,6 +1,6 @@
 /**
 @file utils.h
-Funções de uso geral 
+FunÃ§Ãµes de uso geral 
 */
 
 #pragma once
@@ -9,7 +9,7 @@ void print_error(const char* format, ...);
 void print_debug(const char* format, ...);
 
 /**
- \brief Gera um número aleatório no range (min, max)
+ \brief Gera um nÃºmero aleatÃ³rio no range (min, max)
 
 */
 int random_number(int min, int max);

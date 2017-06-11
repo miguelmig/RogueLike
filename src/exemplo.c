@@ -342,20 +342,20 @@ void imprimir_score_board(int* highscores, ESTADO* e)
 	printf("<div id=\"scoreboard\">\n");
 	printf("<div id=\"highscores\">\n");
 	 
-	printf("<span id=highscore_title>Pontuações Máximas</span>\n");  
+	printf("<span id=highscore_title>PontuaÃ§Ãµes MÃ¡ximas</span>\n");  
 	for (int i = 0; i < HIGHSCORE_SAVE_COUNT; i++)
 	{
 		printf("<span id=highscore%d class=text>%d</span>\n", i, highscores[i]);
 	}
 	printf("</div>\n");
 
-	printf("<p id=score>Pontuação Atual: %d</p>\n",
+	printf("<p id=score>PontuaÃ§Ã£o Atual: %d</p>\n",
 		e->score); 
 
 	printf("<p id=enemies>Inimigos Mortos: %d </p>\n",
 		e->inimigos_mortos);
 
-	printf("<p id=potions>Poções Usadas: %d </p>\n",
+	printf("<p id=potions>PoÃ§Ãµes Usadas: %d </p>\n",
 		e->pocoes_usadas);
 
 	printf("</div>\n");
@@ -579,7 +579,7 @@ int main() {
 		on_game_over(&e);
 	}
 
-	/* Pontuações */
+	/* PontuaÃ§Ãµes */
 	int highscores[HIGHSCORE_SAVE_COUNT] = { 0 };
 	ler_highscores(highscores);
 
@@ -587,7 +587,7 @@ int main() {
 	printf("<body onLoad=\"load();\">\n");
 	imprimir_score_board(highscores, &e);
 	printf("<div class=center>");
-	printf("<span id=level> Nível %d</span>", e.level); 
+	printf("<span id=level> NÃ­vel %d</span>", e.level); 
 	ABRIR_SVG(TAM * ESCALA, TAM * ESCALA);
 	for(y = 0; y < TAM; y++)
 		for(x = 0; x < TAM; x++)
