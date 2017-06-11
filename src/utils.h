@@ -19,7 +19,6 @@ int random_number(int min, int max);
 
 /**
 \brief Cria um cookie no browser do jogador
-
 */
 void write_to_cookie(const char *name,
 	const char *value,

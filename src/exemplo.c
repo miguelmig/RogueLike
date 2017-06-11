@@ -465,16 +465,6 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 					minDistance = distance;
 					bestDirection = j;
 				}
-
-				/*
-				for (int k = j; k < available_directions - 1; k++)
-				{
-					memcpy(directions[k], directions[k + 1], sizeof(int) * 2);
-				}
-
-				--available_directions;
-				j--;
-				*/
 			}
 		}
 

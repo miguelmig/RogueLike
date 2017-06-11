@@ -39,7 +39,7 @@ Path* backtrace(Node* node)
 
 int grid_is_inside(Grid* grid, int x, int y)
 {
-	return (x >= 0 && x < 10) && (y >= 0 && y < 10);
+	return (x >= 0 && x < TAM) && (y >= 0 && y < TAM);
 }
 
 int grid_is_walkable(Grid* grid, int x, int y)
