@@ -1,6 +1,6 @@
 /**
 @file cgi.h
-Macros úteis para gerar CGIs
+@brief Macros úteis para gerar CGIs
 */
 
 #include <stdio.h>
