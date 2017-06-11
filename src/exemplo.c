@@ -8,6 +8,7 @@
 #include "map.h"
 #include "utils.h"
 #include "query.h"
+#include "pathfinding.h"
 
 #define MAX_BUFFER		10240
 
@@ -102,15 +103,32 @@ ESTADO inicializar(int level) {
 
 	int num_obstacles = random_number(MIN_OBSTACLES, MAX_OBSTACLES - 1);
 	// Generate obstacles coords
+
+	int walkableGrid[TAM][TAM];
+	int j;
+	for (i = 0; i < TAM; i++)
+	{
+		for (j = 0; j < TAM; j++)
+		{
+			walkableGrid[i][j] = 1;
+		}
+	}
+
+
 	for (i = 0; num_obstacles != 0; num_obstacles--, e.num_obstaculos++, i++)
 	{
 		int x = random_number(0, TAM - 1);
 		int y = random_number(0, TAM - 1);
+
 		// re-randomize coordinates until they are free
-		while (posicao_livre(x, y, &e) == 0)
+
+		walkableGrid[x][y] = 0;
+		while (posicao_livre(x, y, &e) == 0 || exists_path(e.jog.pos.x, e.jog.pos.y, e.exit.x, e.exit.y, walkableGrid) == 0)
 		{
+			walkableGrid[x][y] = 1;
 			x = random_number(0, TAM - 1);
 			y = random_number(0, TAM - 1);
+			walkableGrid[x][y] = 0;
 		}
 
 		e.obstaculo[i].x = x;
@@ -418,13 +436,27 @@ void atacar_jogador(INIMIGO* enemy, ESTADO* e, int* damage_done)
 
 void mover_inimigos(ESTADO* e, int* damage_done)
 {
-	int i, j;
+	int i;
 
 	int player_x = e->jog.pos.x;
 	int player_y = e->jog.pos.y;
+	int walkableGrid[TAM][TAM];
+	fill_matrix_from_estado(e, 1, walkableGrid);
 
 	for (i = 0; i < e->num_inimigos; i++)
 	{
+		int x = e->inimigo[i].pos.x;
+		int y = e->inimigo[i].pos.y;
+
+		if (abs(player_x - x) + abs(player_y - y) <= 1)
+		{
+			// Can attack
+			atacar_jogador(&e->inimigo[i], e, damage_done);
+			continue;
+		}
+
+		/*
+
 		int directions[5][2] = {
 			{ -1, 0 }, // Esquerda
 			{ 1, 0 }, // Direita
@@ -433,10 +465,7 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 			{ 0, 0 } // Sem mexer
 		};
 
-		int x = e->inimigo[i].pos.x;
-		int y = e->inimigo[i].pos.y;
 		int available_directions = 5;
-
 		float minDistance = TAM * TAM;
 		int bestDirection = 0;
 		int found_available_move = 0;
@@ -470,6 +499,7 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 			continue;
 		}
 
+		
 
 		int optimal_dx = directions[bestDirection][0];
 		int optimal_dy = directions[bestDirection][1];
@@ -477,15 +507,27 @@ void mover_inimigos(ESTADO* e, int* damage_done)
 		int new_x = x + optimal_dx;
 		int new_y = y + optimal_dy;
 
-		if (optimal_dx == 0 && optimal_dy == 0 && abs(player_x - x) + abs(player_y - y) <= 1)
+		*/
+		//fill_matrix_from_estado(e, 1, walkableGrid);
+		Path* path = find_path(x, y, player_x, player_y, walkableGrid);
+		if (path == NULL || path->prox == NULL)
 		{
-			// Can attack
-			atacar_jogador(&e->inimigo[i], e, damage_done);
-			return;
+			continue;
 		}
 
-		e->inimigo[i].pos.x = new_x;
-		e->inimigo[i].pos.y = new_y;
+		POSICAO bestPosition = path->prox->pos;
+		if (get_cell_type_at_pos(e, bestPosition.x, bestPosition.y) != EMPTY)
+		{
+			continue;
+		}
+
+		freePath(path);
+		e->inimigo[i].pos = bestPosition;
+
+		int new_x = bestPosition.x;
+		int new_y = bestPosition.y;
+		walkableGrid[new_x][new_y] = 0;
+		walkableGrid[x][y] = 1;
 	}
 }
 
@@ -501,7 +543,26 @@ void highscore_update(int* highscores, int pos, int value)
 void imprimir_game_over(ESTADO* e)
 {
 	printf("<script>on_game_over(%d)</script>", e->score);
-} 
+}
+
+void imprime_caminho_saida(ESTADO e)
+{
+	if (e.num_inimigos != 0)
+	{
+		return;
+	}
+
+	int walkableGrid[TAM][TAM];
+	fill_matrix_from_estado(&e, 0, walkableGrid);
+	Path* path = find_path(e.jog.pos.x, e.jog.pos.y, e.exit.x, e.exit.y, walkableGrid);
+
+	for (; path != NULL; path = path->prox)
+	{
+		POSICAO pos = path->pos;
+		QUADRADO_SEMI_TRANSPARENTE(pos.x, pos.y, ESCALA, "#32CD32", "0.5");
+	}
+	freePath(path);
+}
 
 int is_game_over(ESTADO* e)
 {
@@ -509,7 +570,7 @@ int is_game_over(ESTADO* e)
 	{
 		return 1;
 	}
-
+	 
 	return e->jog.current_health <= 0;
 }
 
@@ -551,8 +612,11 @@ int main() {
 #else
 	ESTADO e = obter_estado();
 #endif
-	
+
+	//exists_path(PLAYER_START_X, PLAYER_START_Y, EXIT_X, EXIT_Y, &e, walkableGrid);
+
 	COMECAR_HTML;
+	printf("<meta charset = \"UTF-8\">");
 #ifdef USE_COOKIES
 	print_debug("Request Header: \n %s ", method_str);
 #endif
@@ -593,11 +657,13 @@ int main() {
 		for(x = 0; x < TAM; x++)
 			imprime_casa(&e, x, y);
 
+	imprime_caminho_saida(e);
 	imprime_inimigos(e);
 	imprime_jogador(e); 
 	imprime_obstaculos(e);   
 	imprime_pocoes(&e);
 	imprime_saida(e);
+
 	FECHAR_SVG;
 	imprimir_health_bar(e.jog.current_health, e.jog.max_health);
 	imprimir_butao_restart();
@@ -607,6 +673,6 @@ int main() {
 		imprimir_dano(damage_done);
 	}
 	printf("</body>");
-	
+
 	return 0;
 }

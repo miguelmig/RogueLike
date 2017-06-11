@@ -30,6 +30,12 @@ com base no TileSet correspondente ao nível atual, obtido através da função 
 ESTADO inicializar(int level);
 
 /**
+\brief Desenha o caminho para a saída caso não haja inimigos no nível
+@param e[in] Estado do jogo
+*/
+void imprime_caminho_saida(ESTADO e);
+
+/**
 \brief Verifica se o jogo terminou com a última ação realizada
 @param e Estado que vai ser verificado
 @return 1 se o jogo tiver terminado, 0 senão

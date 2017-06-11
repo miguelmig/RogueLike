@@ -1,5 +1,8 @@
 #include "pathfinding.h"
+#include "map.h"
 #include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
 
 Path* create_new_path(int x, int y, LPos* prox)
 {
@@ -14,7 +17,7 @@ void freePath(Path* path)
 {
 	while(path != NULL)
 	{
-		Path* next = path = path->prox;
+		Path* next = path->prox;
 		free(path);
 		path = next;
 	}
@@ -24,27 +27,36 @@ Path* backtrace(Node* node)
 {
 	Path* path = create_new_path(node->pos.x, node->pos.y, NULL);
 	Path* start = path;
-	// std::vector < std::pair<long, long>> path = { { node->m_lX, node->m_lY } };
 
 	while (node->parent) 
 	{
 		path->prox = create_new_path(node->parent->pos.x, node->parent->pos.y, NULL);
 		node = node->parent;
 		path = path->prox;
-		//path.push_back({ node->m_lX, node->m_lY });
 	}
 
-	return start;
+	Path* next;
+	Path* current = start;
+	Path* prev = NULL;
+	while(current != NULL)
+	{
+		next = current->prox;
+		current->prox = prev;
+		prev = current;
+		current = next;
+	}
+
+	return prev;
 }
 
-int grid_is_inside(Grid* grid, int x, int y)
+int grid_is_inside(int x, int y)
 {
 	return (x >= 0 && x < TAM) && (y >= 0 && y < TAM);
 }
 
 int grid_is_walkable(Grid* grid, int x, int y)
 {
-	return grid_is_inside(grid, x, y) && grid->nodes[y][x].mb_Walkable;
+	return grid_is_inside(x, y) && grid->nodes[x][y].mb_Walkable;
 }
 
 int get_neighbors(Grid* grid, Node current, Node** output)
@@ -52,23 +64,23 @@ int get_neighbors(Grid* grid, Node current, Node** output)
 	long x = current.pos.x, y = current.pos.y;
 	int count = 0;
 
-	// ?
-	if (grid_is_walkable(grid, x, y - 1)) {
+	if (grid_is_walkable(grid, x, y - 1)) 
+	{
 		output[count++] = &grid->nodes[x][y - 1];
 	}
 
-	// ?
-	if (grid_is_walkable(grid, x + 1, y)) {
+	if (grid_is_walkable(grid, x + 1, y)) 
+	{
 		output[count++] = &grid->nodes[x +1][y];
 	}
 
-	// ?
-	if (grid_is_walkable(grid, x, y + 1)) {
+	if (grid_is_walkable(grid, x, y + 1)) 
+	{
 		output[count++] = &grid->nodes[x][y + 1];
 	}
 
-	// ?
-	if (grid_is_walkable(grid, x - 1, y)) {
+	if (grid_is_walkable(grid, x - 1, y)) 
+	{
 		output[count++] = &grid->nodes[x - 1][y];
 	}
 
@@ -90,15 +102,15 @@ LNodeOrd* new_lnode_ord(Node* value, LNodeOrd* next)
 
 void insert_ord(LNodeOrd** l, Node* new_node)
 {
-	for (; *l != NULL && (*l)->node->f < new_node->f; l = &((*l)->prox));
+	for (; *l != NULL && (*l)->node->f > new_node->f; l = &((*l)->prox));
 	*l = new_lnode_ord(new_node, *l);
 }
 
-Node* get_top(LNodeOrd** l)
+Node* get_top(LNodeOrd* l)
 {
-	for (; *l != NULL && (*l)->prox != NULL; l = &((*l)->prox));
+	for (; l != NULL && l->prox != NULL; l = l->prox);
 
-	return (*l)->node;
+	return l->node;
 }
 
 void pop(LNodeOrd** l)
@@ -106,11 +118,54 @@ void pop(LNodeOrd** l)
 	for (; *l != NULL && (*l)->prox != NULL; l = &((*l)->prox));
 	*l = NULL;
 }
-/*
+
+void erase(LNodeOrd** l, Node* val)
+{
+	for (; *l != NULL && (*l)->node != val; l = &((*l)->prox));
+	LNodeOrd* next = (*l)->prox;
+	free(*l);
+	*l = next;
+}
+
+void update_walkable_grid(Grid* grid, int** walkable)
+{
+	int i, j;
+
+	for (i = 0; i < TAM; i++)
+	{
+		for (j = 0; j < TAM; j++)
+		{
+			grid->nodes[i][j].mb_Walkable = walkable[i][j];
+		}
+	}
+}
+
+long manhattan(long dx, long dy)
+{
+	return dx + dy;
+}
+
+void freeLNodeOrd(LNodeOrd* openList)
+{
+	while (openList != NULL)
+	{
+		LNodeOrd* next = openList->prox;
+		free(openList);
+		openList = next;
+	}
+}
+
+void print_path(Path* path)
+{
+	for (; path != NULL; path = path->prox)
+	{
+		printf("(%d,%d)\n", path->pos.x, path->pos.y);
+	}
+}
+
 Path* findPath(long startX, long startY, long endX, long endY, Grid* grid)
 {
-	LNodeOrd* openList = (LNodeOrd*)malloc(sizeof(struct lligada_nodes_ord));
-
+	LNodeOrd* openList = (LNodeOrd*)malloc(sizeof(LNodeOrd));
 	Node* startNode = &grid->nodes[startX][startY];
 	Node* endNode = &grid->nodes[endX][endY];
 	Node* neighbors[4];
@@ -127,13 +182,16 @@ Path* findPath(long startX, long startY, long endX, long endY, Grid* grid)
 	// while the open list is not empty
 	while (openList != NULL) {
 		// pop the position of node which has the minimum `f` value.
-		Node* node = openList.top();
-		openList.pop();
+		Node* node = get_top(openList);
+		pop(&openList);
 		node->closed = 1;
 
 		// if reached the end position, construct the path and return it
-		if (node == endNode) {
-			return backtrace(&endNode);
+		if (node == endNode) 
+		{
+			Path* path = backtrace(endNode);
+			freeLNodeOrd(openList);
+			return path;
 		}
 
 		// get neigbours of the current node
@@ -149,13 +207,13 @@ Path* findPath(long startX, long startY, long endX, long endY, Grid* grid)
 
 			// get the distance between current node and the neighbor
 			// and calculate the next g score
-			long ng = node->g + ((x - node->pos.x == 0 || y - node->pos.y == 0) ? 1 : sqrt(2));
+			long ng = node->g + 1;
 
 			// check if the neighbor has not been inspected yet, or
 			// can be reached with smaller cost from the current node
 			if (!neighbor->opened || ng < neighbor->g) {
 				if (neighbor->opened)
-					openList.erase(&neighbor); // Always erase the value from the set before modyfing it
+					erase(&openList, neighbor); // Always erase the value from the set before modyfing it
 				neighbor->g = ng;
 				int manhattanDistance = manhattan(abs(x - endX), abs(y - endY));
 				neighbor->h = manhattanDistance != 0 ? manhattanDistance : 0;
@@ -164,7 +222,7 @@ Path* findPath(long startX, long startY, long endX, long endY, Grid* grid)
 
 				if (!neighbor->opened) 
 				{
-					openList.push(&neighbor);
+					insert_ord(&openList, neighbor);
 					neighbor->opened = 1;
 				}
 				else 
@@ -172,14 +230,65 @@ Path* findPath(long startX, long startY, long endX, long endY, Grid* grid)
 					// the neighbor can be reached with smaller cost.
 					// Since its f value has been updated, we have to
 					// update its position in the open list
-					openList.push(&neighbor);
+					insert_ord(&openList, neighbor);
 				}
 			}
-		} // end for each neighbor
-	} // end while not open list empty
+		}
+	}
 
-	  // fail to find the path
-	return{};
+	// failed to find the path
+	return NULL;
 }
-*/
 
+
+void fill_matrix_from_estado(ESTADO* e, int for_enemy, int walkableGrid[TAM][TAM])
+{
+	int i, j;
+	for (i = 0; i < TAM; i++)
+	{
+		for (j = 0; j < TAM; j++)
+		{
+			if(for_enemy)
+				walkableGrid[i][j] = (get_cell_type_at_pos(e, i, j) == EMPTY);
+			else
+				walkableGrid[i][j] = (get_cell_type_at_pos(e, i, j) != OBSTACLE);
+		}
+	}
+}
+
+Path* find_path(long startX, long startY, long endX, long endY, int walkableGrid[TAM][TAM])
+{
+	Grid grid;
+	int i, j;
+	for (i = 0; i < TAM; i++)
+	{
+		for (j = 0; j < TAM; j++)
+		{
+			grid.nodes[i][j].pos.x = i;
+			grid.nodes[i][j].pos.y = j;
+			grid.nodes[i][j].mb_Walkable = walkableGrid[i][j];
+			grid.nodes[i][j].parent = NULL;
+			grid.nodes[i][j].f = 0;
+			grid.nodes[i][j].g = 0;
+			grid.nodes[i][j].h = 0;
+			grid.nodes[i][j].closed = 0;
+			grid.nodes[i][j].opened = 0;
+		}
+	}
+
+	Path* path = findPath(startX, startY, endX, endY, &grid);
+	//print_path(path);
+	return path;
+}
+
+int exists_path(long startX, long startY, long endX, long endY, int walkableGrid[TAM][TAM])
+{
+	Path* path = find_path(startX, startY, endX, endY, walkableGrid);
+	if (path == NULL)
+	{
+		return 0;
+	}
+
+	free(path);
+	return 1;
+}

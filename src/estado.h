@@ -2,7 +2,6 @@
   *	@file estado.h
   * @brief Definição do estado e das funções que convertem estados em strings e vice-versa
 */
-
 #pragma once
 
 #include "constants.h"

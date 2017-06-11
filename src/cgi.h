@@ -68,6 +68,17 @@
 												ESCALA * X, ESCALA* Y, ESCALA, ESCALA, COR)
 
 /**
+\brief Macro para criar um quadrado semi-transparente
+@param X A coordenada X do canto superior esquerdo
+@param Y A coordenada Y do canto superior esquerdo
+@param ESCALA A escala do quadrado
+@param COR A cor de preenchimento do quadrado
+@param TRANSPARENCIA A opacidade do quadrado
+*/
+#define QUADRADO_SEMI_TRANSPARENTE(X, Y, ESCALA, COR, TRANSPARENCIA) printf("<rect x=%d y=%d width=%d height=%d fill=%s fill-opacity=%s />\n", \
+															ESCALA * X, ESCALA* Y, ESCALA, ESCALA, COR, TRANSPARENCIA)
+
+/** 
 \brief Macro para abrir um link
 @param link O caminho para o link
 */

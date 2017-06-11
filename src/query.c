@@ -56,6 +56,8 @@ int parse_exit_action(const char* exit_query_string, ESTADO* e)
 	ESTADO novo = inicializar(++e->level);
 	novo.level = e->level;
 	novo.score = e->score;
+	novo.inimigos_mortos = e->inimigos_mortos;
+	novo.pocoes_usadas = e->pocoes_usadas;
 	int cur_hp = e->jog.current_health;
 	*e = novo;
 	e->jog.pos.x = dx;

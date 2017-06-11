@@ -113,5 +113,5 @@ function on_damage(damage)
 
 function on_game_over(score)
 {
-    alert("Perdeste o jogo com a pontuação de " + score + "!");
+    alert("Perdeste o jogo com a pontuaÃ§Ã£o de " + score + "!");
 }
