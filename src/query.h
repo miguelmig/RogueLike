@@ -1,3 +1,7 @@
+/**
+* @file query.h
+* @brief Ficheiro principal pela interpretação e criação de links do browser
+*/
 #pragma once
 #include "estado.h"
 
