@@ -1,6 +1,6 @@
 /**
   * @file pathfinding.h
-  * @brief Definição de estruturas uteis no algoritmo A*
+  * @brief DefiniÃ§Ã£o de estruturas uteis no algoritmo A*
 */
 
 #pragma once

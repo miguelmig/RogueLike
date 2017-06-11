@@ -1,6 +1,6 @@
 /**
   * @file map.h
-  * @brief Ficheiro usado para gerar/desenhar/imprimir todo o tipo de acções e imagens relacionadas com a grelha
+  * @brief Ficheiro usado para gerar/desenhar/imprimir todo o tipo de acÃ§Ãµes e imagens relacionadas com a grelha
 */
 
 #pragma once
@@ -17,7 +17,7 @@
 
 /**
   \enum CellTypes
-  \brief Enum contendo todos os possíveis objetos/entidades de uma telha
+  \brief Enum contendo todos os possÃ­veis objetos/entidades de uma telha
 */
 typedef enum
 {
@@ -44,17 +44,17 @@ typedef enum
 } Orientations;
 
 /**
-  * \brief Contém toda a informação necessária sobre um TileSet
+  * \brief ContÃ©m toda a informaÃ§Ã£o necessÃ¡ria sobre um TileSet
 
-  * Esta estrutura é usada para gerar aleatoriamente todo o tipo de texturas
-  * desde telhas, obstáculos e inimigos
+  * Esta estrutura Ã© usada para gerar aleatoriamente todo o tipo de texturas
+  * desde telhas, obstÃ¡culos e inimigos
 */
 typedef struct
 {
 	/** \brief Nome do TileSet */
 	char identifier[MAX_NAME_LENGTH];
 
-	/** \brief Nomes dos ficheiros de todos os obstáculos que podem ser gerados */
+	/** \brief Nomes dos ficheiros de todos os obstÃ¡culos que podem ser gerados */
 	const char obstacles_file_names[OBSTACLE_TILE_MAX][OBSTACLE_TILE_MAX_FILE_NAME_LENGTH]; 
 	int number_of_obstacle_tiles;
 
@@ -69,7 +69,7 @@ typedef struct
 } TileSetData;
 
 /**
-\brief Função usada para obter o conteúdo de uma telha
+\brief FunÃ§Ã£o usada para obter o conteÃºdo de uma telha
 @param e Apontador para o estado
 @param x Coordenada x para procurar
 @param y Coordenada y para procurar
@@ -78,125 +78,125 @@ typedef struct
 CellTypes get_cell_type_at_pos(ESTADO* e, int x, int y);
 
 /**
-\brief Função usada para gerar um indice aleatório para a textura das telhas
-@param tileset O TileSet que contém a informação necessária para saber até que indice se pode gerar
+\brief FunÃ§Ã£o usada para gerar um indice aleatÃ³rio para a textura das telhas
+@param tileset O TileSet que contÃ©m a informaÃ§Ã£o necessÃ¡ria para saber atÃ© que indice se pode gerar
 @returns O indice da textura da telha que vai ser usada
 
-Esta função gera um número aleatório entre 0 e o número de texturas de telhas do \p tileset
+Esta funÃ§Ã£o gera um nÃºmero aleatÃ³rio entre 0 e o nÃºmero de texturas de telhas do \p tileset
 */
 char generate_random_tile_offset(TileSets tileset);
 
 /**
-\brief Função usada para gerar um indice aleatório para a textura das telhas
-@param tileset O TileSet que contém a informação necessária para saber até que indice se pode gerar
-@returns O indice da textura do obstáculo que vai ser usada
+\brief FunÃ§Ã£o usada para gerar um indice aleatÃ³rio para a textura das telhas
+@param tileset O TileSet que contÃ©m a informaÃ§Ã£o necessÃ¡ria para saber atÃ© que indice se pode gerar
+@returns O indice da textura do obstÃ¡culo que vai ser usada
 
-Esta função gera um número aleatório entre 0 e o número de texturas de obstáculos do \p tileset
+Esta funÃ§Ã£o gera um nÃºmero aleatÃ³rio entre 0 e o nÃºmero de texturas de obstÃ¡culos do \p tileset
 */
 char generate_random_obstacle_offset(TileSets tileset);
 
 /**
-\brief Função usada para gerar um indice aleatório para a textura dos inimigos
-@param tileset O TileSet que contém a informação necessária para saber até que indice se pode gerar
+\brief FunÃ§Ã£o usada para gerar um indice aleatÃ³rio para a textura dos inimigos
+@param tileset O TileSet que contÃ©m a informaÃ§Ã£o necessÃ¡ria para saber atÃ© que indice se pode gerar
 @returns O indice da textura de inimigo que vai ser usada
 
-Esta função gera um número aleatório entre 0 e o número de texturas de inimigos do \p tileset
+Esta funÃ§Ã£o gera um nÃºmero aleatÃ³rio entre 0 e o nÃºmero de texturas de inimigos do \p tileset
 */
 char generate_random_enemy_offset(TileSets tileset);
 
 
 /**
-\brief Desenha uma telha, parte gráfica unicamente
+\brief Desenha uma telha, parte grÃ¡fica unicamente
 @param e O Estado do jogo 
 @param x Coordenada X da telha que vai ser desenhada
 @param y Coordenada Y da telha que vai ser desenhada
 
-Desenha uma telha, usando o ESTADO#level na função get_tile_set_data() 
+Desenha uma telha, usando o ESTADO#level na funÃ§Ã£o get_tile_set_data() 
 para obter o #TileSet onde se pode utilizar o ESTADO#tile_texture_offset para obter a textura correta
 */
 void draw_tile(ESTADO* e, int x, int y);
 
 /**
-\brief Desenha um obstáculo, parte gráfica unicamente
+\brief Desenha um obstÃ¡culo, parte grÃ¡fica unicamente
 @param e O Estado do jogo
-@param x Coordenada X do obstáculo que vai ser desenhado
-@param y Coordenada Y do obstáculo que vai ser desenhado
+@param x Coordenada X do obstÃ¡culo que vai ser desenhado
+@param y Coordenada Y do obstÃ¡culo que vai ser desenhado
 
-Desenha um obstáculo, usando o ESTADO#level na função get_tile_set_data()
+Desenha um obstÃ¡culo, usando o ESTADO#level na funÃ§Ã£o get_tile_set_data()
 para obter o #TileSet onde se pode utilizar o ESTADO#obstacle_texture_offset para obter a textura correta
 */
 void draw_obstacle(ESTADO* e, int x, int y);
 
 /**
-\brief Desenha um inimigo, parte gráfica unicamente
+\brief Desenha um inimigo, parte grÃ¡fica unicamente
 @param e O Estado do jogo
-@param x Coordenada X do obstáculo que vai ser desenhado
-@param y Coordenada Y do obstáculo que vai ser desenhado
-@param id Identificador do inimigo que vai ser desenhada. Isto é necessário para identificar o inimigo no array
+@param x Coordenada X do obstÃ¡culo que vai ser desenhado
+@param y Coordenada Y do obstÃ¡culo que vai ser desenhado
+@param id Identificador do inimigo que vai ser desenhada. Isto Ã© necessÃ¡rio para identificar o inimigo no array
 
-Desenha um inimigo, usando o ESTADO#level na função get_tile_set_data()
+Desenha um inimigo, usando o ESTADO#level na funÃ§Ã£o get_tile_set_data()
 para obter o #TileSet onde se pode utilizar o ESTADO#enemy_texture_offset passando o \p id para obter a textura correta
 */
 void draw_enemy(ESTADO* e, int x, int y, int id);
 
 /**
-\brief Cria a hiperligação para o jogador se movimentar, desenhando também a componente gráfica
-@param orientation Orientação do movimento
+\brief Cria a hiperligaÃ§Ã£o para o jogador se movimentar, desenhando tambÃ©m a componente grÃ¡fica
+@param orientation OrientaÃ§Ã£o do movimento
 @param x Coordenada X onde vai ser desenhada a textura da seta
 @param y Coordenada Y onde vai ser desenhada a textura da seta
-@param link Link da ação a ser executada quando o jogador clicar na textura da seta
+@param link Link da aÃ§Ã£o a ser executada quando o jogador clicar na textura da seta
 
-Cria a hiperligação de movimento através da tag \i <a> e desenha a parte gráfica da seta na função draw_arrow_image()
+Cria a hiperligaÃ§Ã£o de movimento atravÃ©s da tag \i <a> e desenha a parte grÃ¡fica da seta na funÃ§Ã£o draw_arrow_image()
 */
 void create_arrow_link(Orientations orientation, int x, int y, const char* link);
 
 /**
 \brief Desenha a textura da seta de movimento
-@param orientation Orientação do movimento
+@param orientation OrientaÃ§Ã£o do movimento
 @param x Coordenada X onde vai ser desenhada a textura da seta
 @param y Coordenada Y onde vai ser desenhada a textura da seta
 
-Desenha a seta no ecrã tendo em conta a \p orientation que vai ser usada como indice na array #move_file_names
+Desenha a seta no ecrÃ£ tendo em conta a \p orientation que vai ser usada como indice na array #move_file_names
 */
 void draw_arrow_image(Orientations orientation, int x, int y);
 
 /**
-\brief Cria a hiperligação para o jogador atacar um inimigo, desenhando também a componente gráfica
-@param orientation Orientação do ataque
+\brief Cria a hiperligaÃ§Ã£o para o jogador atacar um inimigo, desenhando tambÃ©m a componente grÃ¡fica
+@param orientation OrientaÃ§Ã£o do ataque
 @param x Coordenada X onde vai ser desenhada a textura de ataque
 @param y Coordenada Y onde vai ser desenhada a textura de ataque
-@param link Link da ação a ser executada quando o jogador clicar na textura de ataque
+@param link Link da aÃ§Ã£o a ser executada quando o jogador clicar na textura de ataque
 
-Cria a hiperligação de ataque através da tag \i <a> e desenha a parte gráfica de ataque na função draw_attack_image()
+Cria a hiperligaÃ§Ã£o de ataque atravÃ©s da tag \i <a> e desenha a parte grÃ¡fica de ataque na funÃ§Ã£o draw_attack_image()
 */
 void create_attack_link(Orientations orientation, int x, int y, const char* link);
 
 /**
 \brief Desenha a textura do ataque
-@param orientation Orientação do movimento
+@param orientation OrientaÃ§Ã£o do movimento
 @param x Coordenada X onde vai ser desenhada a textura de ataque
 @param y Coordenada Y onde vai ser desenhada a textura de ataque
 
-Desenha o ataque no ecrã tendo em conta a \p orientation que vai ser usada como indice na array #attack_file_names
+Desenha o ataque no ecrÃ£ tendo em conta a \p orientation que vai ser usada como indice na array #attack_file_names
 */
 void draw_attack_image(Orientations orientation, int x, int y);
 
 /**
-\brief Cria a hiperligação para o jogador usar uma poção, desenhando também a componente gráfica
-@param x Coordenada X onde vai ser desenhada a textura da poção
-@param y Coordenada Y onde vai ser desenhada a textura da poção
-@param link Link da ação a ser executada quando o jogador clicar na textura da poção
+\brief Cria a hiperligaÃ§Ã£o para o jogador usar uma poÃ§Ã£o, desenhando tambÃ©m a componente grÃ¡fica
+@param x Coordenada X onde vai ser desenhada a textura da poÃ§Ã£o
+@param y Coordenada Y onde vai ser desenhada a textura da poÃ§Ã£o
+@param link Link da aÃ§Ã£o a ser executada quando o jogador clicar na textura da poÃ§Ã£o
 
-Cria a hiperligação do uso da poção através da tag \i <a> e desenha a parte gráfica da poção na função draw_potion_image()
+Cria a hiperligaÃ§Ã£o do uso da poÃ§Ã£o atravÃ©s da tag \i <a> e desenha a parte grÃ¡fica da poÃ§Ã£o na funÃ§Ã£o draw_potion_image()
 */
 void create_potion_link(int x, int y, const char* link);
 
 /**
-\brief Desenha a textura da poção
-@param x Coordenada X onde vai ser desenhada a textura da poção
-@param y Coordenada Y onde vai ser desenhada a textura da poção
+\brief Desenha a textura da poÃ§Ã£o
+@param x Coordenada X onde vai ser desenhada a textura da poÃ§Ã£o
+@param y Coordenada Y onde vai ser desenhada a textura da poÃ§Ã£o
 
-Desenha a poção com o nome de ficheiro do #define POTION_IMAGE_FILE_NAME
+Desenha a poÃ§Ã£o com o nome de ficheiro do #define POTION_IMAGE_FILE_NAME
 */
 void draw_potion_image(int x, int y);
 
@@ -208,9 +208,9 @@ void draw_potion_image(int x, int y);
 void update_enemy_array(ESTADO* e, int index);
 
 /**
-\brief Remove uma poção do array ESTADO#pocoes no indice \p index
+\brief Remove uma poÃ§Ã£o do array ESTADO#pocoes no indice \p index
 @param e Estado do jogo que vai ser alterado
-@param index Indice da poção a ser retirada
+@param index Indice da poÃ§Ã£o a ser retirada
 */
 void update_potion_array(ESTADO* e, int index);
 
@@ -218,8 +218,8 @@ void update_potion_array(ESTADO* e, int index);
 const char* get_images_asset_directory();
 
 /**
-\brief Devolve o TileSet consoante o nível de jogo atual
-@param level nível a ser usado para obter o TileSets
+\brief Devolve o TileSet consoante o nÃ­vel de jogo atual
+@param level nÃ­vel a ser usado para obter o TileSets
 @returns O TileSet correspondente ao \p level
 */
 TileSets get_tileset_by_level(int level);

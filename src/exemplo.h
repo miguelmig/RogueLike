@@ -1,40 +1,40 @@
 /**
 * @file exemplo.h
-* @brief ContÈm o corpo principal do jogo e maior parte das funcionalidades
+* @brief Cont√©m o corpo principal do jogo e maior parte das funcionalidades
 */
 #pragma once
 #include "estado.h"
 
 /**
-\brief Verifica se uma certa posiÁ„o est· livre
+\brief Verifica se uma certa posi√ß√£o est√° livre
 @param x[in] Coordenada X a verificar
 @param y[in] Coordenada Y a verificar
 @param e[in] Estado do jogo
-@return 1 se estiver livre, 0 sen„o
+@return 1 se estiver livre, 0 sen√£o
 */
 int posicao_livre(int x, int y, ESTADO* e);
 
 /**
-\brief Cria um estado inicial baseado no nÌvel indicado
-@param level NÌvel do estado a ser criado
-@return Estado gerado pela funÁ„o
+\brief Cria um estado inicial baseado no n√≠vel indicado
+@param level N√≠vel do estado a ser criado
+@return Estado gerado pela fun√ß√£o
 
-Esta funÁ„o gera as posiÁıes dos inimigos, dos obst·culos e das poÁıes aleatoriamente.
-O n˙mero de inimigos È randomizado com base nos #define MIN_ENEMIES e #define MAX_ENEMIES
-O n˙mero de obst·culos È randomizado com base nos #define MIN_OBSTACLES e #define MAX_OBSTACLES
-O n˙mero de poÁıes È randomizado com base no #define MIN_POCOES e o nÌvel atual + 1
+Esta fun√ß√£o gera as posi√ß√µes dos inimigos, dos obst√°culos e das po√ß√µes aleatoriamente.
+O n√∫mero de inimigos √© randomizado com base nos #define MIN_ENEMIES e #define MAX_ENEMIES
+O n√∫mero de obst√°culos √© randomizado com base nos #define MIN_OBSTACLES e #define MAX_OBSTACLES
+O n√∫mero de po√ß√µes √© randomizado com base no #define MIN_POCOES e o n√≠vel atual + 1
 
-As texturas dos inimigos, obst·culos e telhas s„o tambÈm randomizadas nesta funÁ„o
-com base no TileSet correspondente ao nÌvel atual, obtido atravÈs da funÁ„o get_tileset_by_level()
+As texturas dos inimigos, obst√°culos e telhas s√£o tamb√©m randomizadas nesta fun√ß√£o
+com base no TileSet correspondente ao n√≠vel atual, obtido atrav√©s da fun√ß√£o get_tileset_by_level()
 */
 ESTADO inicializar(int level);
 
 /**
-\brief Verifica se o jogo terminou com a ˙ltima aÁ„o realizada
+\brief Verifica se o jogo terminou com a √∫ltima a√ß√£o realizada
 @param e Estado que vai ser verificado
-@return 1 se o jogo tiver terminado, 0 sen„o
+@return 1 se o jogo tiver terminado, 0 sen√£o
 
-Verifica se a condiÁ„o de fim de jogo foi cumprida, ou seja, se a vida do jogador È menor ou igual a 0
+Verifica se a condi√ß√£o de fim de jogo foi cumprida, ou seja, se a vida do jogador √© menor ou igual a 0
 */
 int is_game_over(ESTADO* e);
 
@@ -42,7 +42,7 @@ int is_game_over(ESTADO* e);
 \brief Procedimento realizado no fim do jogo
 @param e Estado que vai ser analisado
 
-Atualiza os highscores caso a pontuaÁ„o do jogo atual pertenÁa l· e imprime a janela de 'Game Over' e recomeÁa o jogo
+Atualiza os highscores caso a pontua√ß√£o do jogo atual perten√ßa l√° e imprime a janela de 'Game Over' e recome√ßa o jogo
 */
 void on_game_over(ESTADO* e);
 
@@ -50,45 +50,45 @@ void on_game_over(ESTADO* e);
 \brief Procedimento em que um inimigo ataca um jogador
 @param enemy[in] Inimigo que vai atacar o jogador
 @param e[in, out] Estado do jogo atual.
-@param damage_done[out] Apontador para uma vari·vel que ir· guardar o dano efetuado pelo inimigo
+@param damage_done[out] Apontador para uma vari√°vel que ir√° guardar o dano efetuado pelo inimigo
 
 */
 void atacar_jogador(INIMIGO* enemy, ESTADO* e, int* damage_done);
 
 /**
-\brief Procedimento para mover todos os inimigos no tabuleiro e atacar o jogador caso seja possÌvel
+\brief Procedimento para mover todos os inimigos no tabuleiro e atacar o jogador caso seja poss√≠vel
 @param enemy[in] Inimigo que vai atacar o jogador
-@param damage_done[out] Apontador para uma vari·vel que ir· guardar o dano efetuado pelos inimigos
+@param damage_done[out] Apontador para uma vari√°vel que ir√° guardar o dano efetuado pelos inimigos
 
-Move os inimigos consoante uma funÁ„o simples de dist‚ncia entre a posiÁ„o do jogador e a posiÁ„o do inimigo
-A funÁ„o analisa todas as possÌveis direÁıes que o inimigo se pode mover e escolhe a melhor consoante a dist‚ncia Euclideana
-entre o novo ponto segundo essa direÁ„o e a posiÁ„o do jogador.
+Move os inimigos consoante uma fun√ß√£o simples de dist√¢ncia entre a posi√ß√£o do jogador e a posi√ß√£o do inimigo
+A fun√ß√£o analisa todas as poss√≠veis dire√ß√µes que o inimigo se pode mover e escolhe a melhor consoante a dist√¢ncia Euclideana
+entre o novo ponto segundo essa dire√ß√£o e a posi√ß√£o do jogador.
 
-Caso o inimigo j· esteja numa posiÁ„o capaz de atacar o jogador, ou seja, num + em que o jogador È o centro,
-a funÁ„o atacar_jogador() È chamada e o jogador sofre dano
+Caso o inimigo j√° esteja numa posi√ß√£o capaz de atacar o jogador, ou seja, num + em que o jogador √© o centro,
+a fun√ß√£o atacar_jogador() √© chamada e o jogador sofre dano
 */
 void mover_inimigos(ESTADO* e, int* damage_done);
 
 /**
-\brief LÍ os highscores presentes no ficheiro #define HIGHSCORES_FILE_NAME e coloca-os em \p highscore_array
-@param highscore_array[out] Apontador para uma array que ir· guardar #define HIGHSCORE_SAVE_COUNT n˙mero de highscores
-@return O n˙mero de bytes lidos do ficheiro, 0 significa que houve um erro no procedimento
+\brief L√™ os highscores presentes no ficheiro #define HIGHSCORES_FILE_NAME e coloca-os em \p highscore_array
+@param highscore_array[out] Apontador para uma array que ir√° guardar #define HIGHSCORE_SAVE_COUNT n√∫mero de highscores
+@return O n√∫mero de bytes lidos do ficheiro, 0 significa que houve um erro no procedimento
 */
 int ler_highscores(int* highscore_array);
 
 /**
 \brief Guarda os highscores no ficheiro #define HIGHSCORES_FILE_NAME 
-@param highscore_array[in] Apontador para uma array que contÈm #define HIGHSCORE_SAVE_COUNT n˙mero de highscores 
+@param highscore_array[in] Apontador para uma array que cont√©m #define HIGHSCORE_SAVE_COUNT n√∫mero de highscores 
 para serem guardados 
 */
 void guardar_highscores(int* highscore_array);
 
 /**
-\brief FunÁ„o que obtÈm o Estado do ficheiro
+\brief Fun√ß√£o que obt√©m o Estado do ficheiro
 @return Devolve o estado obtido
 
-Tenta obter o estado que esteja no ficheiro #define STATE_FILE_NAME usando a funÁ„o read_state_from_file()
-Caso n„o seja possÌvel, a funÁ„o inicializar() È chamada com \p level igual a 1 e È criado um novo estado
-e guardado no ficheiro usando a funÁ„o output_state_to_file()
+Tenta obter o estado que esteja no ficheiro #define STATE_FILE_NAME usando a fun√ß√£o read_state_from_file()
+Caso n√£o seja poss√≠vel, a fun√ß√£o inicializar() √© chamada com \p level igual a 1 e √© criado um novo estado
+e guardado no ficheiro usando a fun√ß√£o output_state_to_file()
 */
 ESTADO obter_estado();
