@@ -6,12 +6,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h> // abs
+#include "exemplo.h"
 
 #define MAX_BUFFER		10240
 #define CMP(str)		else if(strcmp(buffer, str) == 0)
 
-ESTADO inicializar(int level);
-void on_game_over(ESTADO* e);
 
 int parse_move_action(const char* move_query_string, ESTADO* e)
 {

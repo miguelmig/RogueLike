@@ -17,7 +17,6 @@
 #define MAX_POCOES 5
 
 /**
-  *	@struct POSICAO
   *	@brief Estrutura que armazena uma posição
 */
 typedef struct posicao {
@@ -26,7 +25,6 @@ typedef struct posicao {
 } POSICAO;
 
 /**
-  * @struct JOGADOR
   * @brief Estrutura que armazena informação sobre o jogador
 */
 typedef struct jogador
@@ -39,7 +37,6 @@ typedef struct jogador
 
 
 /**
-  * \struct INIMIGO
   * \brief Estrutura que armazena informação sobre cada inimigo
 */
 
@@ -52,10 +49,8 @@ typedef struct inimigo
 } INIMIGO;
 
 /**
-\struct ESTADO
 \brief Estrutura que armazena o estado do jogo
 */
-
 typedef struct estado {
 	/** A posição do jogador */
 	JOGADOR jog;
@@ -75,19 +70,19 @@ typedef struct estado {
 	POSICAO pocoes[MAX_POCOES];
 	/** Seed necessária para a função rand() */
 	unsigned int gameSeed;
-	/* Estado sobre a textura de cada casa */
+	/** Estado sobre a textura de cada casa */
 	char tile_texture_offset[TAM][TAM];
-	/* Estado sobre a textura de cada obstáculo */
+	/** Estado sobre a textura de cada obstáculo */
 	char obstacle_texture_offset[TAM][TAM];
-	/* Estado sobre a textura de cada inimigo */
+	/** Estado sobre a textura de cada inimigo */
 	char enemy_texture_offset[MAX_INIMIGOS];
-	/* Nivel de progresso atual do jogo */
+	/** Nivel de progresso atual do jogo */
 	int level;
-	/* Pontuação do jogo atual */
+	/** Pontuação do jogo atual */
 	int score;
-	/* Número de Inimigos Mortos */
+	/** Número de Inimigos Mortos */
 	int inimigos_mortos;
-	/* Número de Poções Usadas */
+	/** Número de Poções Usadas */
 	int pocoes_usadas;
 } ESTADO;
 
