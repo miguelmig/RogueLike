@@ -13,7 +13,7 @@ install: exemplo
 	touch install
 
 exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o $(SOURCEDIR)pathfinding.o
-	cc -Wall -Wextra -pedantic -O2 -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o pathfinding.o -lm 
+	cc -Wall -Wextra -pedantic -O2 -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o $(SOURCEDIR)pathfinding.o -lm 
 
 exemplo.zip: $(FICHEIROS)
 	zip -9 exemplo.zip $(FICHEIROS)
