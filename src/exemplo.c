@@ -3,9 +3,6 @@
 #include <math.h> // for abs
 #include <time.h> // for time
 
-
-//#define USE_COOKIES
-
 #include "cgi.h"
 #include "estado.h"
 #include "map.h"
