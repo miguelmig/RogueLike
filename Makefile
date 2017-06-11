@@ -1,5 +1,5 @@
 CFLAGS=-Wall -Wextra -pedantic -O2
-FICHEIROS=cgi.h estado.c estado.h map.c map.h exemplo.c Makefile
+FICHEIROS=cgi.h estado.c estado.h map.c map.h exemplo.c Makefile pathfinding.h pathfinding.c
 
 SOURCEDIR = src/
 
@@ -12,8 +12,8 @@ install: exemplo
 	sudo cp -R images/ /var/www/html/
 	touch install
 
-exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o
-	cc -Wall -Wextra -pedantic -O2 -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o -lm 
+exemplo: $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o pathfinding.o
+	cc -Wall -Wextra -pedantic -O2 -o exemplo $(SOURCEDIR)exemplo.o $(SOURCEDIR)estado.o $(SOURCEDIR)map.o $(SOURCEDIR)utils.o $(SOURCEDIR)query.o pathfinding.o -lm 
 
 exemplo.zip: $(FICHEIROS)
 	zip -9 exemplo.zip $(FICHEIROS)
@@ -30,3 +30,4 @@ exemplo.o: exemplo.c
 map.o: map.c
 utils.o: utils.c
 query.o: query.c
+pathfinding.o: pathfinding.c
